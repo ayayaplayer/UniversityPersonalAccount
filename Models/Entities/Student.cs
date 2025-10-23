@@ -12,5 +12,7 @@ namespace UniversityPersonalAccount.Models.Entities
         public string Email { get; set; } = string.Empty;
         public int GroupId { get; set; }
         public Group? group { get; set; }
+
+        public ICollection<Course> Courses { get; set; } = new List<Course>();
     }
 }

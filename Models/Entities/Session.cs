@@ -11,9 +11,9 @@ namespace UniversityPersonalAccount.Models.Entities
         public int DayOfWeek { get; set; }
         public DateTime StartTime { get; set; } = DateTime.Now;
         public DateTime EndTime { get; set; } = DateTime.Now;
-        public ICollection<HalfYear> HalfYears { get; set; } = new List<HalfYear>();
-        public int ScheduleId { get; set; }
-        public Schedule Schedule { get; set; } = null!;
+       
+        public int HalfYearId { get; set; }
+        public HalfYear HalfYear { get; set; } = null!;
 
     }
 }

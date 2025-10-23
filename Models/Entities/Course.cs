@@ -1,11 +1,16 @@
-﻿namespace UniversityPersonalAccount.Models.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace UniversityPersonalAccount.Models.Entities
 {
     public class Course
     { 
         public int Id { get; set; }
-        public int Name { get; set; }
+        [Range (1,7)]
+        public string? Name { get; set; }
         public string? Degree { get; set; }
-        public int GroupId { get; set; }
-        public Group? group { get; set; }
+
+        public ICollection<Group> Groups { get; set; } = new List<Group>();
+        public ICollection<Student> Students { get; set; } = new List<Student>();
+
     }
 }

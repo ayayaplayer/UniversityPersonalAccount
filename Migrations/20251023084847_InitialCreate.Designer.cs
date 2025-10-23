@@ -12,8 +12,8 @@ using UniversityPersonalAccount.Data;
 namespace UniversityPersonalAccount.Migrations
 {
     [DbContext(typeof(PersonalAccountDbContext))]
-    [Migration("20251022132310_Initial")]
-    partial class Initial
+    [Migration("20251023084847_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -153,10 +153,7 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("Sessions", t =>
-                        {
-                            t.HasCheckConstraint("CK_DayOfWeek", "[DayOfWeek] > 0 AND [DayOfWeek] < 8");
-                        });
+                    b.ToTable("Sessions");
                 });
 
             modelBuilder.Entity("UniversityPersonalAccount.Models.Entities.Student", b =>

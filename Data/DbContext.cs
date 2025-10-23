@@ -5,6 +5,13 @@ namespace UniversityPersonalAccount.Data;
 
 public class PersonalAccountDbContext : DbContext
 {
+    public PersonalAccountDbContext(DbContextOptions<PersonalAccountDbContext> options)
+        : base(options)
+    {
+        
+    }
+        
+   
     public DbSet<Student> Students { get; set; }
     public DbSet<Faculty> Faculties { get; set; }
 
@@ -15,8 +22,9 @@ public class PersonalAccountDbContext : DbContext
     public DbSet<Group> Groups { get; set; }
 
     public DbSet<Schedule> Schedules { get; set; }
-    public string DbPath { get; }
+    public string? DbPath { get; }
 
+    
     public PersonalAccountDbContext()
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
@@ -28,11 +36,7 @@ public class PersonalAccountDbContext : DbContext
     // The following configures EF to create a Sqlite database file in the
     // special "local" folder for your platform.
    
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder
-            .Entity<Session>()
-            .ToTable(b => b.HasCheckConstraint("CK_DayOfWeek", "[DayOfWeek] > 0 AND [DayOfWeek] < 8"));
-    }
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+        => options.UseNpgsql("Host=localhost;Port=5432;Database=PersonalAccountDb;Username=postgres;Password=password");
+    
 }

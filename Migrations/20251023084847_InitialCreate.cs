@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace UniversityPersonalAccount.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,7 +60,6 @@ namespace UniversityPersonalAccount.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sessions", x => x.Id);
-                    table.CheckConstraint("CK_DayOfWeek", "[DayOfWeek] > 0 AND [DayOfWeek] < 8");
                     table.ForeignKey(
                         name: "FK_Sessions_Schedules_ScheduleId",
                         column: x => x.ScheduleId,

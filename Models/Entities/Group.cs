@@ -5,13 +5,13 @@
         public int Id { get; set; }
         public string GroupName { get; set; } = string.Empty;
 
-        public ICollection<Student> students { get; } = new List<Student>();
-        public ICollection<Faculty> faculties { get; } = new List<Faculty>();
+        public ICollection<Student> Students { get; } = new List<Student>();
+        
 
-        public ICollection<Course> courses { get; } = new List<Course>();
+        public ICollection<Course> Courses { get; } = new List<Course>();
 
 
-        public int ScheduleId { get; set; }
-        public Schedule Schedule { get; set; } = null!;
+        public int FacultyId { get; set; }
+        public Faculty Faculty { get; set; } = null!;
     }
 }
