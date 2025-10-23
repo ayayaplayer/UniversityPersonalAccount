@@ -7,7 +7,6 @@ namespace UniversityPersonalAccount.Models.DTOs
         public int DayOfWeek { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-        public int HalfYearId { get; set; }
         public HalfYearDto? HalfYear { get; set; }
     }
 
