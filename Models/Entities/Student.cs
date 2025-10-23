@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace UniversityPersonalAccount.Models.Entities
+﻿namespace UniversityPersonalAccount.Models.Entities
 {
     public class Student
     {

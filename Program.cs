@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using UniversityPersonalAccount.Data;
+using AutoMapper;
+using UniversityPersonalAccount.Models.DTOs;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-
-
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddDbContext<PersonalAccountDbContext>(options =>
     options.UseNpgsql(connectionString));

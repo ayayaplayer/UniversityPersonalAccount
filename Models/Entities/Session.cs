@@ -9,9 +9,8 @@ namespace UniversityPersonalAccount.Models.Entities
         public int Id { get; set; }
         
         public int DayOfWeek { get; set; }
-        public DateTime StartTime { get; set; } = DateTime.Now;
-        public DateTime EndTime { get; set; } = DateTime.Now;
-       
+        public TimeOnly StartTime { get; set; }
+        public TimeOnly EndTime { get; set; }
         public int HalfYearId { get; set; }
         public HalfYear HalfYear { get; set; } = null!;
 
