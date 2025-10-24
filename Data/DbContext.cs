@@ -31,11 +31,17 @@ public class PersonalAccountDbContext : DbContext
         var path = Environment.GetFolderPath(folder);
         DbPath = System.IO.Path.Join(path, "PersonalAccount.db");
     }
-    
+
 
     // The following configures EF to create a Sqlite database file in the
     // special "local" folder for your platform.
-   
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Session>()
+            .ToTable(t => t.HasCheckConstraint("CKDayOfWeek", " \"DayOfWeek\" > 0 AND \"DayOfWeek\" < 8"));
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseNpgsql("Host=localhost;Port=5432;Database=PersonalAccountDb;Username=postgres;Password=password");
     
