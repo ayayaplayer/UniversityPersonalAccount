@@ -20,7 +20,7 @@ namespace UniversityPersonalAccount.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetStudent(int id)
+        public IActionResult GetStudentById(int id)
         {
             var student = _context.Students.Find(id);
             if (student == null)
@@ -46,7 +46,7 @@ namespace UniversityPersonalAccount.Controllers
             _context.SaveChanges();
             
             var studentDto = _mapper.Map<StudentDto>(student);
-            return CreatedAtAction(nameof(GetStudent), new { id = student.Id }, studentDto);
+            return CreatedAtAction(nameof(GetStudentById), new { id = student.Id }, studentDto);
         }
 
         [HttpPut("{id}")]

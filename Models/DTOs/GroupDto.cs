@@ -13,6 +13,8 @@ namespace UniversityPersonalAccount.Models.DTOs
     public class GroupCreateDto
     {
         public string GroupName { get; set; } = string.Empty;
+
+        public int FacultyId { get; set; }
     }
 
     public class GroupUpdateDto
