@@ -38,11 +38,9 @@ namespace UniversityPersonalAccount.Controllers
         [HttpGet]
         public IActionResult GetAllGroups()
         {
-            var groups = _context.Groups.ToList();
+            var groups = _context.Groups.Include(g => g.Faculty).ToList();
             var groupsDtos = _mapper.Map<List<GroupDto>>(groups);
             return Ok(groupsDtos);
-
-
         }
 
 

@@ -5,8 +5,8 @@ namespace UniversityPersonalAccount.Models.Entities
     public class HalfYear
     {
         public int Id { get; set; }
-        public DateTime DateStart { get; set; } = DateTime.Now;
-        public DateTime DateEnd { get; set; } = DateTime.Now;
+        public DateOnly DateStart { get; set; } = new DateOnly();
+        public DateOnly DateEnd { get; set; } = new DateOnly();
         public ICollection<Session> Sessions { get; } = new List<Session>();
     }
 }

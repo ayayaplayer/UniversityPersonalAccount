@@ -7,7 +7,8 @@ namespace UniversityPersonalAccount.Models.DTOs
         public string? Name { get; set; }
         public string? Surname { get; set; }
         public string Email { get; set; } = string.Empty;
-        public GroupDto? Group { get; set; }
+
+        public ICollection<GroupDto> Groups { get; set; } = new List<GroupDto>();
         public ICollection<CourseDto> Courses { get; set; } = new List<CourseDto>();
     }
     public class StudentCreateDto

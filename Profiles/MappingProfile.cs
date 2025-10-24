@@ -1,17 +1,15 @@
 using AutoMapper;
 using UniversityPersonalAccount.Models.Entities;
 
+
 namespace UniversityPersonalAccount.Models.DTOs
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
-           
-            CreateMap<Student, StudentDto>()
-                .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.group));
-            CreateMap<StudentDto, Student>()
-                .ForMember(dest => dest.group, opt => opt.MapFrom(src => src.Group));
+
+            CreateMap<Student, StudentDto>();
             CreateMap<StudentCreateDto, Student>();
             CreateMap<StudentUpdateDto, Student>();
 

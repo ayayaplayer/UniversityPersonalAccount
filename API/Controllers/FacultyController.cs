@@ -38,7 +38,7 @@ namespace UniversityPersonalAccount.Controllers
         [HttpGet]
         public IActionResult GetAllFaculties()
         {
-            var faculties = _context.Faculties.ToList();
+            var faculties = _context.Faculties.Include(g => g.Groups).ToList();
             var facultiesDtos = _mapper.Map<List<FacultyDto>>(faculties);
             return Ok(facultiesDtos);
 

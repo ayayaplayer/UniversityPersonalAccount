@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniversityPersonalAccount.Data;
@@ -11,9 +12,11 @@ using UniversityPersonalAccount.Data;
 namespace UniversityPersonalAccount.Migrations
 {
     [DbContext(typeof(PersonalAccountDbContext))]
-    partial class PersonalAccountDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251024091015_ChangeSession")]
+    partial class ChangeSession
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -122,11 +125,11 @@ namespace UniversityPersonalAccount.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateOnly>("DateEnd")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("DateEnd")
+                        .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateOnly>("DateStart")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("DateStart")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 

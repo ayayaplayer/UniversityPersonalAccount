@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
-using UniversityPersonalAccount.Models.Entities;
-using UniversityPersonalAccount.Models.DTOs;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using UniversityPersonalAccount.Data;
+using UniversityPersonalAccount.Models.DTOs;
+using UniversityPersonalAccount.Models.Entities;
 
 namespace UniversityPersonalAccount.Controllers
 {
@@ -33,7 +34,7 @@ namespace UniversityPersonalAccount.Controllers
         [HttpGet]
         public IActionResult GetAllStudents()
         {
-            var students = _context.Students.ToList();
+            var students = _context.Students.Include(g => g.group).ToList();
             var studentDtos = _mapper.Map<List<StudentDto>>(students);
             return Ok(studentDtos);
         }
