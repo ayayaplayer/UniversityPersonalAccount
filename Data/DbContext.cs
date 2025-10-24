@@ -40,6 +40,12 @@ public class PersonalAccountDbContext : DbContext
     {
         modelBuilder.Entity<Session>()
             .ToTable(t => t.HasCheckConstraint("CKDayOfWeek", " \"DayOfWeek\" > 0 AND \"DayOfWeek\" < 8"));
+        modelBuilder.Entity<Session>()
+           .ToTable(t => t.HasCheckConstraint("CKValidateSessionTime", " \"EndTime\" >  \"StartTime\" "));
+        modelBuilder.Entity<HalfYear>()
+            .ToTable(t => t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\" < "));
+        modelBuilder.Entity<Student>()
+            .ToTable(t => t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~  '^.*$' "));
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniversityPersonalAccount.Data;
@@ -11,9 +12,11 @@ using UniversityPersonalAccount.Data;
 namespace UniversityPersonalAccount.Migrations
 {
     [DbContext(typeof(PersonalAccountDbContext))]
-    partial class PersonalAccountDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251024133525_CreateValidateTime")]
+    partial class CreateValidateTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,10 +220,7 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Students", t =>
-                        {
-                            t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~  '^.*$' ");
-                        });
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("CourseGroup", b =>
