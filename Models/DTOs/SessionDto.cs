@@ -1,10 +1,12 @@
+using UniversityPersonalAccount.Models.Entities;
+
 namespace UniversityPersonalAccount.Models.DTOs
 
 {
- public class SessionGetAllDto
+    public class SessionGetAllDto
     {
         public int Id { get; set; }
-        public int DayOfWeek { get; set; }
+        public ClassNumber ClassNumber { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
     }
@@ -12,7 +14,7 @@ namespace UniversityPersonalAccount.Models.DTOs
     public class SessionGetByIdDto
     {
         public int Id { get; set; }
-        public int DayOfWeek { get; set; }
+        public ClassNumber ClassNumber { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
         public HalfYearBasicDto? HalfYear { get; set; }
@@ -20,7 +22,7 @@ namespace UniversityPersonalAccount.Models.DTOs
 
     public class SessionCreateDto
     {
-        public int DayOfWeek { get; set; }
+        public ClassNumber ClassNumber { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
         public int HalfYearId { get; set; }
@@ -29,7 +31,7 @@ namespace UniversityPersonalAccount.Models.DTOs
     public class SessionUpdateDto
     {
         public int Id { get; set; }
-        public int DayOfWeek { get; set; }
+        public ClassNumber ClassNumber { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
         public int HalfYearId { get; set; }
@@ -38,7 +40,7 @@ namespace UniversityPersonalAccount.Models.DTOs
     public class SessionBasicDto
     {
         public int Id { get; set; }
-        public int DayOfWeek { get; set; }
+        public ClassNumber ClassNumber { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
     }

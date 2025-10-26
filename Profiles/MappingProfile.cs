@@ -9,7 +9,7 @@ namespace UniversityPersonalAccount.Mappings
     {
         public MappingProfile()
         {
-            // ============ COURSE MAPPINGS ============
+           
             CreateMap<Course, CourseGetAllDto>();
             CreateMap<Course, CourseGetByIdDto>()
                 .ForMember(dest => dest.Groups, opt => opt.MapFrom(src => src.Groups))
@@ -18,7 +18,7 @@ namespace UniversityPersonalAccount.Mappings
             CreateMap<CourseUpdateDto, Course>();
             CreateMap<Course, CourseBasicDto>();
 
-            // ============ FACULTY MAPPINGS ============
+            
             CreateMap<Faculty, FacultyGetAllDto>();
             CreateMap<Faculty, FacultyGetByIdDto>()
                 .ForMember(dest => dest.Groups, opt => opt.MapFrom(src => src.Groups));
@@ -26,7 +26,7 @@ namespace UniversityPersonalAccount.Mappings
             CreateMap<FacultyUpdateDto, Faculty>();
             CreateMap<Faculty, FacultyBasicDto>();
 
-            // ============ GROUP MAPPINGS ============
+           
             CreateMap<Group, GroupGetAllDto>()
                 .ForMember(dest => dest.Faculty, opt => opt.MapFrom(src => src.Faculty));
             CreateMap<Group, GroupGetByIdDto>()
@@ -37,7 +37,7 @@ namespace UniversityPersonalAccount.Mappings
             CreateMap<GroupUpdateDto, Group>();
             CreateMap<Group, GroupBasicDto>();
 
-            // ============ STUDENT MAPPINGS ============
+        
             CreateMap<Student, StudentGetAllDto>();
             CreateMap<Student, StudentGetByIdDto>()
                 .ForMember(dest => dest.Group, opt => opt.MapFrom(src => src.group))
@@ -46,7 +46,7 @@ namespace UniversityPersonalAccount.Mappings
             CreateMap<StudentUpdateDto, Student>();
             CreateMap<Student, StudentBasicDto>();
 
-            // ============ HALFYEAR MAPPINGS ============
+           
             CreateMap<HalfYear, HalfYearGetAllDto>();
             CreateMap<HalfYear, HalfYearGetByIdDto>()
                 .ForMember(dest => dest.Sessions, opt => opt.MapFrom(src => src.Sessions));
@@ -54,7 +54,7 @@ namespace UniversityPersonalAccount.Mappings
             CreateMap<HalfYearUpdateDto, HalfYear>();
             CreateMap<HalfYear, HalfYearBasicDto>();
 
-            // ============ SESSION MAPPINGS ============
+           
             CreateMap<Session, SessionGetAllDto>();
             CreateMap<Session, SessionGetByIdDto>()
                 .ForMember(dest => dest.HalfYear, opt => opt.MapFrom(src => src.HalfYear));
@@ -62,7 +62,7 @@ namespace UniversityPersonalAccount.Mappings
             CreateMap<SessionUpdateDto, Session>();
             CreateMap<Session, SessionBasicDto>();
 
-            // ============ SCHEDULE MAPPINGS ============
+           
             CreateMap<Schedule, ScheduleGetAllDto>();
             CreateMap<Schedule, ScheduleGetByIdDto>()
                 .ForMember(dest => dest.Groups, opt => opt.MapFrom(src => src.Groups))
