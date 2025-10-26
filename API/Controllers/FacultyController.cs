@@ -1,88 +1,97 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UniversityPersonalAccount.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using UniversityPersonalAccount.Models.DTOs;
-using UniversityPersonalAccount.Models.Entities;
+using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class FacultyController : ControllerBase
     {
-        private readonly PersonalAccountDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IFacultyService _facultyService;
 
-        public FacultyController(PersonalAccountDbContext context, IMapper mapper)
+        public FacultyController(IFacultyService facultyService)
         {
-            _context = context;
-            _mapper = mapper;
+            _facultyService = facultyService;
         }
-
-
-
-        [HttpGet("{id}")]
-        public IActionResult GetFacultyById(int id)
-        {
-            var faculty = _context.Faculties.Find(id);
-            if (faculty == null)
-                return NotFound();
-
-            var facultyDto = _mapper.Map<FacultyDto>(faculty);
-            return Ok(facultyDto);
-        }
-
-
 
         [HttpGet]
-        public IActionResult GetAllFaculties()
+        [ProducesResponseType(typeof(IEnumerable<FacultyGetAllDto>), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<CourseGetAllDto>> GetAll()
         {
-            var faculties = _context.Faculties.Include(g => g.Groups).ToList();
-            var facultiesDtos = _mapper.Map<List<FacultyDto>>(faculties);
-            return Ok(facultiesDtos);
-
-
+            var faculties = _facultyService.GetAll();
+            return Ok(faculties);
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(FacultyGetByIdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<FacultyGetByIdDto> GetById(int id)
+        {
+            var faculty = _facultyService.GetById(id);
+            if (faculty == null)
+                return NotFound(new { message = $"Курс с ID {id} не найден" });
+
+            return Ok(faculty);
+        }
 
         [HttpPost]
-        public IActionResult CreateFaculty(FacultyCreateDto dto)
+        [ProducesResponseType(typeof(FacultyGetByIdDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<FacultyGetByIdDto> Create([FromBody] FacultyCreateDto createDto)
         {
-            var faculty = _mapper.Map<Faculty>(dto);
-            _context.Faculties.Add(faculty);
-            _context.SaveChanges();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var facultyDto = _mapper.Map<FacultyDto>(faculty);
-            return CreatedAtAction(nameof(GetFacultyById), new { id = faculty.Id }, facultyDto);
+            try
+            {
+                var faculty = _facultyService.Create(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = faculty.Id }, faculty);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateFaculty(int id, FacultyUpdateDto dto)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Update(int id, [FromBody] FacultyUpdateDto updateDto)
         {
-            var faculty = _context.Faculties.Find(id);
-            if (faculty == null)
-                return NotFound();
+            if (id != updateDto.Id)
+                return BadRequest(new { message = "ID в URL не совпадает с ID в теле запроса" });
 
-            _mapper.Map(dto, faculty);
-            _context.SaveChanges();
-
-            return Ok(_mapper.Map<FacultyDto>(faculty));
+            try
+            {
+                _facultyService.Update(updateDto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteFaculty(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Delete(int id)
         {
-            var faculty = _context.Faculties.Find(id);
-            if (faculty == null)
-                return NotFound();
-
-            _context.Faculties.Remove(faculty);
-            _context.SaveChanges();
-
-            return NoContent();
+            try
+            {
+                _facultyService.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
-
-
     }
 }

@@ -1,88 +1,97 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UniversityPersonalAccount.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using UniversityPersonalAccount.Models.DTOs;
-using UniversityPersonalAccount.Models.Entities;
+using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ScheduleController : ControllerBase
     {
-        private readonly PersonalAccountDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IScheduleService _scheduleService;
 
-        public ScheduleController(PersonalAccountDbContext context, IMapper mapper)
+        public ScheduleController(IScheduleService scheduleService)
         {
-            _context = context;
-            _mapper = mapper;
+            _scheduleService = scheduleService;
         }
-
-
-
-        [HttpGet("{id}")]
-        public IActionResult GetScheduleById(int id)
-        {
-            var schedule = _context.Schedules.Find(id);
-            if (schedule == null)
-                return NotFound();
-
-            var scheduleDto = _mapper.Map<ScheduleDto>(schedule);
-            return Ok(scheduleDto);
-        }
-
-
 
         [HttpGet]
-        public IActionResult GetAllSchedules()
+        [ProducesResponseType(typeof(IEnumerable<ScheduleGetAllDto>), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<ScheduleGetAllDto>> GetAll()
         {
-            var schedules = _context.Schedules.ToList();
-            var schedulesDtos = _mapper.Map<List<ScheduleDto>>(schedules);
-            return Ok(schedulesDtos);
-
-
+            var schedules = _scheduleService.GetAll();
+            return Ok(schedules);
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ScheduleGetByIdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<ScheduleGetByIdDto> GetById(int id)
+        {
+            var schedule = _scheduleService.GetById(id);
+            if (schedule == null)
+                return NotFound(new { message = $"Курс с ID {id} не найден" });
+
+            return Ok(schedule);
+        }
 
         [HttpPost]
-        public IActionResult CreateSchedule(ScheduleCreateDto dto)
+        [ProducesResponseType(typeof(ScheduleGetByIdDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<ScheduleGetByIdDto> Create([FromBody] ScheduleCreateDto createDto)
         {
-            var schedule = _mapper.Map<Schedule>(dto);
-            _context.Schedules.Add(schedule);
-            _context.SaveChanges();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var scheduleDto = _mapper.Map<ScheduleDto>(schedule);
-            return CreatedAtAction(nameof(GetScheduleById), new { id = schedule.Id }, scheduleDto);
+            try
+            {
+                var schedule = _scheduleService.Create(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = schedule.Id }, schedule);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateSchedule(int id, ScheduleUpdateDto dto)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Update(int id, [FromBody] ScheduleUpdateDto updateDto)
         {
-            var schedule = _context.Schedules.Find(id);
-            if (schedule == null)
-                return NotFound();
+            if (id != updateDto.Id)
+                return BadRequest(new { message = "ID в URL не совпадает с ID в теле запроса" });
 
-            _mapper.Map(dto, schedule);
-            _context.SaveChanges();
-
-            return Ok(_mapper.Map<ScheduleDto>(schedule));
+            try
+            {
+                _scheduleService.Update(updateDto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteSchedule(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Delete(int id)
         {
-            var schedule = _context.Schedules.Find(id);
-            if (schedule == null)
-                return NotFound();
-
-            _context.Schedules.Remove(schedule);
-            _context.SaveChanges();
-
-            return NoContent();
+            try
+            {
+                _scheduleService.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
-
-
     }
 }

@@ -1,88 +1,97 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UniversityPersonalAccount.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using UniversityPersonalAccount.Models.DTOs;
-using UniversityPersonalAccount.Models.Entities;
+using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class CourseController : ControllerBase
+    [Route("api/[controller]")]
+    public class CoursesController : ControllerBase
     {
-        private readonly PersonalAccountDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly ICourseService _courseService;
 
-        public CourseController(PersonalAccountDbContext context, IMapper mapper)
+        public CoursesController(ICourseService courseService)
         {
-            _context = context;
-            _mapper = mapper;
+            _courseService = courseService;
         }
-
-
-
-        [HttpGet("{id}")]
-        public IActionResult GetCourseById(int id)
-        {
-            var course = _context.Courses.Find(id);
-            if (course == null)
-                return NotFound();
-
-            var courseDto = _mapper.Map<CourseDto>(course);
-            return Ok(courseDto);
-        }
-
-
 
         [HttpGet]
-        public IActionResult GetAllCourses()
+        [ProducesResponseType(typeof(IEnumerable<CourseGetAllDto>), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<CourseGetAllDto>> GetAll()
         {
-            var courses = _context.Courses.ToList();
-            var coursesDtos = _mapper.Map<List<CourseDto>>(courses);
-            return Ok(coursesDtos);
-
-
+            var courses = _courseService.GetAll();
+            return Ok(courses);
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(CourseGetByIdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<CourseGetByIdDto> GetById(int id)
+        {
+            var course = _courseService.GetById(id);
+            if (course == null)
+                return NotFound(new { message = $"Курс с ID {id} не найден" });
+
+            return Ok(course);
+        }
 
         [HttpPost]
-        public IActionResult CreateCourse(CourseCreateDto dto)
+        [ProducesResponseType(typeof(CourseGetByIdDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<CourseGetByIdDto> Create([FromBody] CourseCreateDto createDto)
         {
-            var course = _mapper.Map<Course>(dto);
-            _context.Courses.Add(course);
-            _context.SaveChanges();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var courseDto = _mapper.Map<CourseDto>(course);
-            return CreatedAtAction(nameof(GetCourseById), new { id = course.Id }, courseDto);
+            try
+            {
+                var course = _courseService.Create(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = course.Id }, course);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateCourse(int id, CourseUpdateDto dto)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Update(int id, [FromBody] CourseUpdateDto updateDto)
         {
-            var course = _context.Courses.Find(id);
-            if (course == null)
-                return NotFound();
+            if (id != updateDto.Id)
+                return BadRequest(new { message = "ID в URL не совпадает с ID в теле запроса" });
 
-            _mapper.Map(dto, course);
-            _context.SaveChanges();
-
-            return Ok(_mapper.Map<CourseDto>(course));
+            try
+            {
+                _courseService.Update(updateDto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCourse(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Delete(int id)
         {
-            var course = _context.Courses.Find(id);
-            if (course == null)
-                return NotFound();
-
-            _context.Courses.Remove(course);
-            _context.SaveChanges();
-
-            return NoContent();
+            try
+            {
+                _courseService.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
-
-
     }
 }

@@ -1,79 +1,97 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UniversityPersonalAccount.Data;
 using UniversityPersonalAccount.Models.DTOs;
-using UniversityPersonalAccount.Models.Entities;
+using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class StudentsController : ControllerBase
+    public class StudentController : ControllerBase
     {
-        private readonly PersonalAccountDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IStudentService _studentService;
 
-        public StudentsController(PersonalAccountDbContext context, IMapper mapper)
+        public StudentController(IStudentService studentService)
         {
-            _context = context;
-            _mapper = mapper;
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetStudentById(int id)
-        {
-            var student = _context.Students.Find(id);
-            if (student == null)
-                return NotFound();
-
-            var studentDto = _mapper.Map<StudentDto>(student);
-            return Ok(studentDto);
+            _studentService = studentService;
         }
 
         [HttpGet]
-        public IActionResult GetAllStudents()
+        [ProducesResponseType(typeof(IEnumerable<StudentGetAllDto>), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<StudentGetAllDto>> GetAll()
         {
-            var students = _context.Students.Include(g => g.group).ToList();
-            var studentDtos = _mapper.Map<List<StudentDto>>(students);
-            return Ok(studentDtos);
+            var students = _studentService.GetAll();
+            return Ok(students);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(StudentGetByIdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<StudentGetByIdDto> GetById(int id)
+        {
+            var student = _studentService.GetById(id);
+            if (student == null)
+                return NotFound(new { message = $"Курс с ID {id} не найден" });
+
+            return Ok(student);
         }
 
         [HttpPost]
-        public IActionResult CreateStudent(StudentCreateDto dto)
+        [ProducesResponseType(typeof(StudentGetByIdDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<StudentGetByIdDto> Create([FromBody] StudentCreateDto createDto)
         {
-            var student = _mapper.Map<Student>(dto);
-            _context.Students.Add(student);
-            _context.SaveChanges();
-            
-            var studentDto = _mapper.Map<StudentDto>(student);
-            return CreatedAtAction(nameof(GetStudentById), new { id = student.Id }, studentDto);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var student = _studentService.Create(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = student.Id }, student);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateStudent(int id, StudentUpdateDto dto)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Update(int id, [FromBody] StudentUpdateDto updateDto)
         {
-            var student = _context.Students.Find(id);
-            if (student == null)
-                return NotFound();
+            if (id != updateDto.Id)
+                return BadRequest(new { message = "ID в URL не совпадает с ID в теле запроса" });
 
-            _mapper.Map(dto, student);
-            _context.SaveChanges();
-
-            return Ok(_mapper.Map<StudentDto>(student));
+            try
+            {
+                _studentService.Update(updateDto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteStudent(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Delete(int id)
         {
-            var student = _context.Students.Find(id);
-            if (student == null)
-                return NotFound();
-
-            _context.Students.Remove(student);
-            _context.SaveChanges();
-
-            return NoContent();
+            try
+            {
+                _studentService.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
     }
 }

@@ -1,11 +1,21 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using UniversityPersonalAccount.Data;
-using AutoMapper;
-using UniversityPersonalAccount.Models.DTOs;
+using UniversityPersonalAccount.Mappings;
+using UniversityPersonalAccount.Services.Interfaces;
+using UniversityPersonalAccount.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<IFacultyService, FacultyService>();
+builder.Services.AddScoped<IGroupService, GroupService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IHalfYearService, HalfYearService>();
+builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddDbContext<PersonalAccountDbContext>(options =>

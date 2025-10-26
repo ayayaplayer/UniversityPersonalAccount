@@ -1,88 +1,97 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UniversityPersonalAccount.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using UniversityPersonalAccount.Models.DTOs;
-using UniversityPersonalAccount.Models.Entities;
+using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class SessionsController : ControllerBase
+    [Route("api/[controller]")]
+    public class SessionController : ControllerBase
     {
-        private readonly PersonalAccountDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly ISessionService _sessionService;
 
-        public SessionsController(PersonalAccountDbContext context, IMapper mapper)
+        public SessionController(ISessionService sessionService)
         {
-            _context = context;
-            _mapper = mapper;
+            _sessionService = sessionService;
         }
-
-
-
-        [HttpGet("{id}")]
-        public IActionResult GetSessionById(int id)
-        {
-            var session = _context.Sessions.Find(id);
-            if (session == null)
-                return NotFound();
-
-            var sessionDto = _mapper.Map<SessionDto>(session);
-            return Ok(sessionDto);
-        }
-
-
 
         [HttpGet]
-        public IActionResult GetAllSessions()
+        [ProducesResponseType(typeof(IEnumerable<SessionGetAllDto>), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<SessionGetAllDto>> GetAll()
         {
-            var sessions = _context.Sessions.ToList();
-            var sessionsDtos = _mapper.Map<List<SessionDto>>(sessions);
-            return Ok(sessionsDtos);
-
-
+            var sessions = _sessionService.GetAll();
+            return Ok(sessions);
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(SessionGetByIdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<SessionGetByIdDto> GetById(int id)
+        {
+            var session = _sessionService.GetById(id);
+            if (session == null)
+                return NotFound(new { message = $"Курс с ID {id} не найден" });
+
+            return Ok(session);
+        }
 
         [HttpPost]
-        public IActionResult CreateSession(SessionCreateDto dto)
+        [ProducesResponseType(typeof(SessionGetByIdDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<SessionGetByIdDto> Create([FromBody] SessionCreateDto createDto)
         {
-            var session = _mapper.Map<Session>(dto);
-            _context.Sessions.Add(session);
-            _context.SaveChanges();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var sessionDto = _mapper.Map<SessionDto>(session);
-            return CreatedAtAction(nameof(GetSessionById), new { id = session.Id }, sessionDto);
+            try
+            {
+                var session = _sessionService.Create(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = session.Id }, session);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateSession(int id, SessionUpdateDto dto)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Update(int id, [FromBody] SessionUpdateDto updateDto)
         {
-            var session = _context.Sessions.Find(id);
-            if (session == null)
-                return NotFound();
+            if (id != updateDto.Id)
+                return BadRequest(new { message = "ID в URL не совпадает с ID в теле запроса" });
 
-            _mapper.Map(dto, session);
-            _context.SaveChanges();
-
-            return Ok(_mapper.Map<SessionDto>(session));
+            try
+            {
+                _sessionService.Update(updateDto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteSession(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Delete(int id)
         {
-            var session = _context.Sessions.Find(id);
-            if (session == null)
-                return NotFound();
-
-            _context.Sessions.Remove(session);
-            _context.SaveChanges();
-
-            return NoContent();
+            try
+            {
+                _sessionService.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
-
-
     }
 }

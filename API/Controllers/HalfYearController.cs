@@ -1,86 +1,97 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using UniversityPersonalAccount.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using UniversityPersonalAccount.Models.DTOs;
-using UniversityPersonalAccount.Models.Entities;
+using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class HalfYearController : ControllerBase
     {
-        private readonly PersonalAccountDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IHalfYearService _halfyearService;
 
-        public HalfYearController(PersonalAccountDbContext context, IMapper mapper)
+        public HalfYearController(IHalfYearService halfyearService)
         {
-            _context = context;
-            _mapper = mapper;
+            _halfyearService = halfyearService;
         }
-
-
-
-        [HttpGet("{id}")]
-        public IActionResult GetHalfYearById(int id)
-        {
-            var halfyear = _context.HalfYears.Find(id);
-            if (halfyear == null)
-                return NotFound();
-
-            var halfyearDto = _mapper.Map<HalfYearDto>(halfyear);
-            return Ok(halfyearDto);
-        }
-
-
 
         [HttpGet]
-        public IActionResult GetAllHalfYears()
+        [ProducesResponseType(typeof(IEnumerable<HalfYearGetAllDto>), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<HalfYearGetAllDto>> GetAll()
         {
-            var halfyears = _context.HalfYears.ToList();
-            var halfyearDtos = _mapper.Map<List<HalfYearDto>>(halfyears);
-            return Ok(halfyearDtos);
+            var halfyears = _halfyearService.GetAll();
+            return Ok(halfyears);
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(HalfYearGetByIdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<HalfYearGetByIdDto> GetById(int id)
+        {
+            var halfyear = _halfyearService.GetById(id);
+            if (halfyear == null)
+                return NotFound(new { message = $"Курс с ID {id} не найден" });
+
+            return Ok(halfyear);
+        }
 
         [HttpPost]
-        public IActionResult CreateHalfYear(HalfYearCreateDto dto)
+        [ProducesResponseType(typeof(HalfYearGetByIdDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public ActionResult<HalfYearGetByIdDto> Create([FromBody] HalfYearCreateDto createDto)
         {
-            var halfyear = _mapper.Map<HalfYear>(dto);
-            _context.HalfYears.Add(halfyear);
-            _context.SaveChanges();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            var halfyearDto = _mapper.Map<HalfYearDto>(halfyear);
-            return CreatedAtAction(nameof(GetHalfYearById), new { id = halfyear.Id }, halfyearDto);
+            try
+            {
+                var halfyear = _halfyearService.Create(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = halfyear.Id }, halfyear);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateHalfYear(int id, HalfYearUpdateDto dto)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Update(int id, [FromBody] HalfYearUpdateDto updateDto)
         {
-            var halfyear = _context.HalfYears.Find(id);
-            if (halfyear == null)
-                return NotFound();
+            if (id != updateDto.Id)
+                return BadRequest(new { message = "ID в URL не совпадает с ID в теле запроса" });
 
-            _mapper.Map(dto, halfyear);
-            _context.SaveChanges();
-
-            return Ok(_mapper.Map<HalfYearDto>(halfyear));
+            try
+            {
+                _halfyearService.Update(updateDto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteHalfYear(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public IActionResult Delete(int id)
         {
-            var halfYear = _context.HalfYears.Find(id);
-            if (halfYear == null)
-                return NotFound();
-
-            _context.HalfYears.Remove(halfYear);
-            _context.SaveChanges();
-
-            return NoContent();
+            try
+            {
+                _halfyearService.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
-
-
     }
 }
