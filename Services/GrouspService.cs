@@ -1,0 +1,122 @@
+using UniversityPersonalAccount.Data;
+using UniversityPersonalAccount.Models.Entities;
+using UniversityPersonalAccount.Models.DTOs;
+using UniversityPersonalAccount.Services.Interfaces;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+
+namespace UniversityPersonalAccount.Services;
+
+public class GroupService : IGroupService
+{
+    private readonly PersonalAccountDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly ILogger<GroupService> _logger;
+
+    public GroupService(PersonalAccountDbContext context, IMapper mapper, ILogger<GroupService> logger)
+    {
+        _context = context;
+        _mapper = mapper;
+        _logger = logger;
+    }
+
+    public IEnumerable<Group> GetAll()
+    {
+        try
+        {
+            return _context.Groups.Include(g => g.Faculty).ToList();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка при получении всех групп");
+            throw;
+        }
+    }
+
+    public Group? GetById(int id)
+    {
+        try
+        {
+            return _context.Groups
+                .Include(g => g.Faculty)
+                .Include(g => g.Students)
+                .Include(g => g.Courses)
+                .FirstOrDefault(g => g.Id == id);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Ошибка при получении группы с ID {id}");
+            throw;
+        }
+    }
+
+    public Group Create(GroupCreateDto dto)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(dto.GroupName))
+                throw new ArgumentException("Название группы не может быть пустым");
+
+            var faculty = _context.Faculties.Find(dto.FacultyId);
+            if (faculty == null)
+                throw new KeyNotFoundException($"Факультет с ID {dto.FacultyId} не найден");
+
+            var group = _mapper.Map<Group>(dto);
+            _context.Groups.Add(group);
+            _context.SaveChanges();
+
+            _logger.LogInformation($"Группа '{dto.GroupName}' успешно создана");
+            return group;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка при создании группы");
+            throw;
+        }
+    }
+
+    public void Update(GroupUpdateDto dto)
+    {
+        try
+        {
+            var group = _context.Groups.Find(dto.Id);
+            if (group == null)
+                throw new KeyNotFoundException($"Группа с ID {dto.Id} не найдена");
+
+            var faculty = _context.Faculties.Find(dto.FacultyId);
+            if (faculty == null)
+                throw new KeyNotFoundException($"Факультет с ID {dto.FacultyId} не найден");
+
+            _mapper.Map(dto, group);
+            _context.Groups.Update(group);
+            _context.SaveChanges();
+
+            _logger.LogInformation($"Группа с ID {dto.Id} успешно обновлена");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Ошибка при обновлении группы {dto.Id}");
+            throw;
+        }
+    }
+
+    public void Delete(int id)
+    {
+        try
+        {
+            var group = _context.Groups.Find(id);
+            if (group == null)
+                throw new KeyNotFoundException($"Группа с ID {id} не найдена");
+
+            _context.Groups.Remove(group);
+            _context.SaveChanges();
+
+            _logger.LogInformation($"Группа с ID {id} успешно удалена");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Ошибка при удалении группы {id}");
+            throw;
+        }
+    }
+}
