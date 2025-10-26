@@ -1,11 +1,18 @@
 namespace UniversityPersonalAccount.Models.DTOs
 { 
- public class HalfYearDto
+  public class HalfYearGetAllDto
     {
         public int Id { get; set; }
         public DateOnly DateStart { get; set; }
         public DateOnly DateEnd { get; set; }
-        public ICollection<SessionDto> Sessions { get; set; } = new List<SessionDto>();
+    }
+
+    public class HalfYearGetByIdDto
+    {
+        public int Id { get; set; }
+        public DateOnly DateStart { get; set; }
+        public DateOnly DateEnd { get; set; }
+        public List<SessionBasicDto> Sessions { get; set; } = new();
     }
 
     public class HalfYearCreateDto
@@ -15,6 +22,13 @@ namespace UniversityPersonalAccount.Models.DTOs
     }
 
     public class HalfYearUpdateDto
+    {
+        public int Id { get; set; }
+        public DateOnly DateStart { get; set; }
+        public DateOnly DateEnd { get; set; }
+    }
+
+    public class HalfYearBasicDto
     {
         public int Id { get; set; }
         public DateOnly DateStart { get; set; }

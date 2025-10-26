@@ -1,13 +1,20 @@
 namespace UniversityPersonalAccount.Models.DTOs
 {
 
-    public class ScheduleDto
+    public class ScheduleGetAllDto
     {
         public int Id { get; set; }
         public string? SubjectName { get; set; }
         public string? Classroom { get; set; }
-        public ICollection<GroupDto> Groups { get; set; } = new List<GroupDto>();
-        public ICollection<SessionDto> Sessions { get; set; } = new List<SessionDto>();
+    }
+
+    public class ScheduleGetByIdDto
+    {
+        public int Id { get; set; }
+        public string? SubjectName { get; set; }
+        public string? Classroom { get; set; }
+        public List<GroupBasicDto> Groups { get; set; } = new();
+        public List<SessionBasicDto> Sessions { get; set; } = new();
     }
 
     public class ScheduleCreateDto

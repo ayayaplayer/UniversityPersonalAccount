@@ -1,11 +1,17 @@
 namespace UniversityPersonalAccount.Models.DTOs
 {
     
-     public class FacultyDto
+     public class FacultyGetAllDto
     {
         public int Id { get; set; }
         public string? Name { get; set; }
-        public ICollection<GroupDto> Groups { get; set; } = new List<GroupDto>();
+    }
+
+    public class FacultyGetByIdDto
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public List<GroupBasicDto> Groups { get; set; } = new();
     }
 
     public class FacultyCreateDto
@@ -14,6 +20,12 @@ namespace UniversityPersonalAccount.Models.DTOs
     }
 
     public class FacultyUpdateDto
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+    }
+
+    public class FacultyBasicDto
     {
         public int Id { get; set; }
         public string? Name { get; set; }

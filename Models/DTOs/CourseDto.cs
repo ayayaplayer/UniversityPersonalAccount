@@ -1,12 +1,20 @@
 namespace UniversityPersonalAccount.Models.DTOs
 {
-          public class CourseDto
+         
+   public class CourseGetAllDto
     {
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? DegreeLevel { get; set; }
-        public ICollection<GroupDto> Groups { get; set; } = new List<GroupDto>();
-        public ICollection<StudentDto> Students { get; set; } = new List<StudentDto>();
+    }
+
+    public class CourseGetByIdDto
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? DegreeLevel { get; set; }
+        public List<GroupBasicDto> Groups { get; set; } = new();
+        public int StudentCount { get; set; }
     }
 
     public class CourseCreateDto
@@ -20,5 +28,11 @@ namespace UniversityPersonalAccount.Models.DTOs
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? DegreeLevel { get; set; }
+    }
+
+    public class CourseBasicDto
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
     }
 }
