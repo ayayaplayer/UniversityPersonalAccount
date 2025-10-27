@@ -1,12 +1,12 @@
 using UniversityPersonalAccount.Data;
 using UniversityPersonalAccount.Models.Entities;
-using UniversityPersonalAccount.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using UniversityPersonalAccount.Models.DTOs.Course;
 using Microsoft.OpenApi.Extensions;
+using UniversityPersonalAccount.Services.Interfaces;
 
-namespace UniversityPersonalAccount.Services
+namespace UniversityPersonalAccount.Services.CourseService
 {
 
     public class CourseService : ICourseService

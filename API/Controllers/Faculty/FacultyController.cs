@@ -3,7 +3,7 @@ using UniversityPersonalAccount.Models.DTOs.Course;
 using UniversityPersonalAccount.Models.DTOs.Faculty;
 using UniversityPersonalAccount.Services.Interfaces;
 
-namespace UniversityPersonalAccount.Controllers
+namespace UniversityPersonalAccount.API.Controllers.Faculty
 {
     [ApiController]
     [Route("api/[controller]")]

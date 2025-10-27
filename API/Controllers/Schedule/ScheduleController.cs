@@ -1,52 +1,52 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UniversityPersonalAccount.Models.DTOs.Session;
+using UniversityPersonalAccount.Models.DTOs.Schedule;
 using UniversityPersonalAccount.Services.Interfaces;
 
-namespace UniversityPersonalAccount.Controllers
+namespace UniversityPersonalAccount.API.Controllers.Schedule
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class SessionController : ControllerBase
+    public class ScheduleController : ControllerBase
     {
-        private readonly ISessionService _sessionService;
+        private readonly IScheduleService _scheduleService;
 
-        public SessionController(ISessionService sessionService)
+        public ScheduleController(IScheduleService scheduleService)
         {
-            _sessionService = sessionService;
+            _scheduleService = scheduleService;
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<SessionGetAllDto>), StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<SessionGetAllDto>> GetAll()
+        [ProducesResponseType(typeof(IEnumerable<ScheduleGetAllDto>), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<ScheduleGetAllDto>> GetAll()
         {
-            var sessions = _sessionService.GetAll();
-            return Ok(sessions);
+            var schedules = _scheduleService.GetAll();
+            return Ok(schedules);
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(SessionGetByIdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ScheduleGetByIdDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<SessionGetByIdDto> GetById(int id)
+        public ActionResult<ScheduleGetByIdDto> GetById(int id)
         {
-            var session = _sessionService.GetById(id);
-            if (session == null)
+            var schedule = _scheduleService.GetById(id);
+            if (schedule == null)
                 return NotFound(new { message = $"Курс с ID {id} не найден" });
 
-            return Ok(session);
+            return Ok(schedule);
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(SessionGetByIdDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ScheduleGetByIdDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<SessionGetByIdDto> Create([FromBody] SessionCreateDto createDto)
+        public ActionResult<ScheduleGetByIdDto> Create([FromBody] ScheduleCreateDto createDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var session = _sessionService.Create(createDto);
-                return CreatedAtAction(nameof(GetById), new { id = session.Id }, session);
+                var schedule = _scheduleService.Create(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = schedule.Id }, schedule);
             }
             catch (ArgumentException ex)
             {
@@ -58,14 +58,14 @@ namespace UniversityPersonalAccount.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Update(int id, [FromBody] SessionUpdateDto updateDto)
+        public IActionResult Update(int id, [FromBody] ScheduleUpdateDto updateDto)
         {
             if (id != updateDto.Id)
                 return BadRequest(new { message = "ID в URL не совпадает с ID в теле запроса" });
 
             try
             {
-                _sessionService.Update(updateDto);
+                _scheduleService.Update(updateDto);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
@@ -85,7 +85,7 @@ namespace UniversityPersonalAccount.Controllers
         {
             try
             {
-                _sessionService.Delete(id);
+                _scheduleService.Delete(id);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)

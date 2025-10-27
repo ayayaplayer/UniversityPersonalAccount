@@ -1,52 +1,52 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UniversityPersonalAccount.Models.DTOs.Course;
+using UniversityPersonalAccount.Models.DTOs.Group;
 using UniversityPersonalAccount.Services.Interfaces;
 
-namespace UniversityPersonalAccount.Controllers
+namespace UniversityPersonalAccount.API.Controllers.Group
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CoursesController : ControllerBase
+    public class GroupController : ControllerBase
     {
-        private readonly ICourseService _courseService;
+        private readonly IGroupService _groupService;
 
-        public CoursesController(ICourseService courseService)
+        public GroupController(IGroupService groupService)
         {
-            _courseService = courseService;
+            _groupService = groupService;
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<CourseGetAllDto>), StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<CourseGetAllDto>> GetAll()
+        [ProducesResponseType(typeof(IEnumerable<GroupGetAllDto>), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<GroupGetAllDto>> GetAll()
         {
-            var courses = _courseService.GetAll();
-            return Ok(courses);
+            var groups = _groupService.GetAll();
+            return Ok(groups);
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(CourseGetByIdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GroupGetByIdDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<CourseGetByIdDto> GetById(int id)
+        public ActionResult<GroupGetByIdDto> GetById(int id)
         {
-            var course = _courseService.GetById(id);
-            if (course == null)
+            var group = _groupService.GetById(id);
+            if (group == null)
                 return NotFound(new { message = $"Курс с ID {id} не найден" });
 
-            return Ok(course);
+            return Ok(group);
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(CourseGetByIdDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(GroupGetByIdDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<CourseGetByIdDto> Create([FromBody] CourseCreateDto createDto)
+        public ActionResult<GroupGetByIdDto> Create([FromBody] GroupCreateDto createDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var course = _courseService.Create(createDto);
-                return CreatedAtAction(nameof(GetById), new { id = course.Id }, course);
+                var group = _groupService.Create(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = group.Id }, group);
             }
             catch (ArgumentException ex)
             {
@@ -58,14 +58,14 @@ namespace UniversityPersonalAccount.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Update(int id, [FromBody] CourseUpdateDto updateDto)
+        public IActionResult Update(int id, [FromBody] GroupUpdateDto updateDto)
         {
             if (id != updateDto.Id)
                 return BadRequest(new { message = "ID в URL не совпадает с ID в теле запроса" });
 
             try
             {
-                _courseService.Update(updateDto);
+                _groupService.Update(updateDto);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
@@ -85,7 +85,7 @@ namespace UniversityPersonalAccount.Controllers
         {
             try
             {
-                _courseService.Delete(id);
+                _groupService.Delete(id);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)

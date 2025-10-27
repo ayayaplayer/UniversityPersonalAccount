@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using UniversityPersonalAccount.Models.DTOs.Student;
 using UniversityPersonalAccount.Services.Interfaces;
 
-namespace UniversityPersonalAccount.Controllers
+namespace UniversityPersonalAccount.API.Controllers.Student
 {
     [ApiController]
     [Route("api/[controller]")]

@@ -3,13 +3,24 @@ using Microsoft.EntityFrameworkCore;
 using UniversityPersonalAccount.Data;
 using UniversityPersonalAccount.Mappings;
 using UniversityPersonalAccount.Services.Interfaces;
-using UniversityPersonalAccount.Services;
+using UniversityPersonalAccount.Services.CourseService;
+using UniversityPersonalAccount.Services.FacultyService;
+using UniversityPersonalAccount.Services.GroupService;
+using UniversityPersonalAccount.Services.HalfYearService;
+using UniversityPersonalAccount.Services.SchdeuleService;
+using UniversityPersonalAccount.Services.SessionService;
+using UniversityPersonalAccount.Services.StudentService;
+
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddScoped<ICourseWithGroupService, CourseWithGroupService>();
 builder.Services.AddScoped<IFacultyService, FacultyService>();
 builder.Services.AddScoped<IGroupService, GroupService>();
 builder.Services.AddScoped<IStudentService, StudentService>();

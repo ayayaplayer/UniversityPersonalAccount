@@ -1,52 +1,52 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UniversityPersonalAccount.Models.DTOs.HalfYear;
 using UniversityPersonalAccount.Services.Interfaces;
+using UniversityPersonalAccount.Models.DTOs.Course;
 
-namespace UniversityPersonalAccount.Controllers
+namespace UniversityPersonalAccount.API.Controllers.Course
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class HalfYearController : ControllerBase
+    public class CoursesController : ControllerBase
     {
-        private readonly IHalfYearService _halfyearService;
+        private readonly ICourseService _courseService;
 
-        public HalfYearController(IHalfYearService halfyearService)
+        public CoursesController(ICourseService courseService)
         {
-            _halfyearService = halfyearService;
+            _courseService = courseService;
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<HalfYearGetAllDto>), StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<HalfYearGetAllDto>> GetAll()
+        [ProducesResponseType(typeof(IEnumerable<CourseGetAllDto>), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<CourseGetAllDto>> GetAll()
         {
-            var halfyears = _halfyearService.GetAll();
-            return Ok(halfyears);
+            var courses = _courseService.GetAll();
+            return Ok(courses);
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(HalfYearGetByIdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(CourseGetByIdDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<HalfYearGetByIdDto> GetById(int id)
+        public ActionResult<CourseGetByIdDto> GetById(int id)
         {
-            var halfyear = _halfyearService.GetById(id);
-            if (halfyear == null)
+            var course = _courseService.GetById(id);
+            if (course == null)
                 return NotFound(new { message = $"Курс с ID {id} не найден" });
 
-            return Ok(halfyear);
+            return Ok(course);
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(HalfYearGetByIdDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CourseGetByIdDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<HalfYearGetByIdDto> Create([FromBody] HalfYearCreateDto createDto)
+        public ActionResult<CourseGetByIdDto> Create([FromBody] CourseCreateDto createDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var halfyear = _halfyearService.Create(createDto);
-                return CreatedAtAction(nameof(GetById), new { id = halfyear.Id }, halfyear);
+                var course = _courseService.Create(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = course.Id }, course);
             }
             catch (ArgumentException ex)
             {
@@ -58,14 +58,14 @@ namespace UniversityPersonalAccount.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Update(int id, [FromBody] HalfYearUpdateDto updateDto)
+        public IActionResult Update(int id, [FromBody] CourseUpdateDto updateDto)
         {
             if (id != updateDto.Id)
                 return BadRequest(new { message = "ID в URL не совпадает с ID в теле запроса" });
 
             try
             {
-                _halfyearService.Update(updateDto);
+                _courseService.Update(updateDto);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
@@ -85,7 +85,7 @@ namespace UniversityPersonalAccount.Controllers
         {
             try
             {
-                _halfyearService.Delete(id);
+                _courseService.Delete(id);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)

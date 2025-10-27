@@ -1,52 +1,52 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UniversityPersonalAccount.Models.DTOs.Group;
+using UniversityPersonalAccount.Models.DTOs.HalfYear;
 using UniversityPersonalAccount.Services.Interfaces;
 
-namespace UniversityPersonalAccount.Controllers
+namespace UniversityPersonalAccount.API.Controllers.HalfYear
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class GroupController : ControllerBase
+    public class HalfYearController : ControllerBase
     {
-        private readonly IGroupService _groupService;
+        private readonly IHalfYearService _halfyearService;
 
-        public GroupController(IGroupService groupService)
+        public HalfYearController(IHalfYearService halfyearService)
         {
-            _groupService = groupService;
+            _halfyearService = halfyearService;
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<GroupGetAllDto>), StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<GroupGetAllDto>> GetAll()
+        [ProducesResponseType(typeof(IEnumerable<HalfYearGetAllDto>), StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<HalfYearGetAllDto>> GetAll()
         {
-            var groups = _groupService.GetAll();
-            return Ok(groups);
+            var halfyears = _halfyearService.GetAll();
+            return Ok(halfyears);
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(GroupGetByIdDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(HalfYearGetByIdDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public ActionResult<GroupGetByIdDto> GetById(int id)
+        public ActionResult<HalfYearGetByIdDto> GetById(int id)
         {
-            var group = _groupService.GetById(id);
-            if (group == null)
+            var halfyear = _halfyearService.GetById(id);
+            if (halfyear == null)
                 return NotFound(new { message = $"Курс с ID {id} не найден" });
 
-            return Ok(group);
+            return Ok(halfyear);
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(GroupGetByIdDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(HalfYearGetByIdDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<GroupGetByIdDto> Create([FromBody] GroupCreateDto createDto)
+        public ActionResult<HalfYearGetByIdDto> Create([FromBody] HalfYearCreateDto createDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                var group = _groupService.Create(createDto);
-                return CreatedAtAction(nameof(GetById), new { id = group.Id }, group);
+                var halfyear = _halfyearService.Create(createDto);
+                return CreatedAtAction(nameof(GetById), new { id = halfyear.Id }, halfyear);
             }
             catch (ArgumentException ex)
             {
@@ -58,14 +58,14 @@ namespace UniversityPersonalAccount.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Update(int id, [FromBody] GroupUpdateDto updateDto)
+        public IActionResult Update(int id, [FromBody] HalfYearUpdateDto updateDto)
         {
             if (id != updateDto.Id)
                 return BadRequest(new { message = "ID в URL не совпадает с ID в теле запроса" });
 
             try
             {
-                _groupService.Update(updateDto);
+                _halfyearService.Update(updateDto);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)
@@ -85,7 +85,7 @@ namespace UniversityPersonalAccount.Controllers
         {
             try
             {
-                _groupService.Delete(id);
+                _halfyearService.Delete(id);
                 return NoContent();
             }
             catch (KeyNotFoundException ex)

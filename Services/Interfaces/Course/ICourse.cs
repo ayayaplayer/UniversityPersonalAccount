@@ -1,11 +1,8 @@
-using UniversityPersonalAccount.Models.Entities;
 using UniversityPersonalAccount.Models.DTOs.Course;
-
-
+using UniversityPersonalAccount.Models.Entities;
 
 namespace UniversityPersonalAccount.Services.Interfaces
 {
-
 
     public interface ICourseService
     {
@@ -16,6 +13,7 @@ namespace UniversityPersonalAccount.Services.Interfaces
         void Delete(int id);
     }
 
-
-
 }
+
+
+ 

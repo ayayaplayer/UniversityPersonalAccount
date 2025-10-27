@@ -1,11 +1,11 @@
 using UniversityPersonalAccount.Data;
 using UniversityPersonalAccount.Models.Entities;
-using UniversityPersonalAccount.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using UniversityPersonalAccount.Models.DTOs.HalfYear;
+using UniversityPersonalAccount.Services.Interfaces;
 
-namespace UniversityPersonalAccount.Services;
+namespace UniversityPersonalAccount.Services.HalfYearService;
 
 
 
