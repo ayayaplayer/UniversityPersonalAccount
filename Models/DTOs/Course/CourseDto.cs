@@ -34,6 +34,7 @@ namespace UniversityPersonalAccount.Models.DTOs.Course
     {
         public int Id { get; set; }
         public CourseName CourseName { get; set; }
-        
+        public DegreeLevel DegreeLevel { get; set; }
+
     }
 }

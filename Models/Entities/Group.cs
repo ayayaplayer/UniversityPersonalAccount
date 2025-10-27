@@ -10,6 +10,7 @@
 
         public ICollection<Course> Courses { get; } = new List<Course>();
 
+        public int CourseId { get; set; }
 
         public int FacultyId { get; set; }
         public Faculty Faculty { get; set; } = null!;

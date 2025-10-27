@@ -17,6 +17,7 @@ namespace UniversityPersonalAccount.Models.DTOs.Faculty
     public class FacultyCreateDto
     {
         public string? Name { get; set; }
+        public int  GroupId { get; set; }
     }
 
     public class FacultyUpdateDto

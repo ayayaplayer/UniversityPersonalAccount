@@ -68,10 +68,6 @@ namespace UniversityPersonalAccount.Mappings
             CreateMap<ScheduleCreateDto, Schedule>();
             CreateMap<ScheduleUpdateDto, Schedule>();
 
-
-
-            CreateMap<Course, CourseWithGroupGetAllDto>();
-            CreateMap<Course, CourseWithGroupGetByIdDto>();
         }
     }
 }

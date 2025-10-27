@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using UniversityPersonalAccount.Data;
 using UniversityPersonalAccount.Models.Entities;
+using UniversityPersonalAccount.Models.DTOs;
 using UniversityPersonalAccount.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +29,8 @@ namespace UniversityPersonalAccount.Services.CourseService
                 try
                 {
                     return _context.Courses
-                    .Include(g => g.Groups)
+                    .Include( g => g.Students)
+                    .Include( g => g.Groups ) 
                     .ToList();
                 }
                 catch (Exception ex)

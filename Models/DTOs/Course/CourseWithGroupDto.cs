@@ -1,5 +1,7 @@
 ﻿using UniversityPersonalAccount.Models.DTOs.Group;
 using UniversityPersonalAccount.Models.Entities;
+
+
 namespace UniversityPersonalAccount.Models.DTOs.Course
 {
     
@@ -9,9 +11,9 @@ namespace UniversityPersonalAccount.Models.DTOs.Course
             public CourseName CourseName { get; set; }
             public DegreeLevel DegreeLevel { get; set; }
 
-            public int? GroupId { get; set; }
+            public GroupBasicDto? Group { get; set; }
+            public string? GroupName     { get; set; }
 
-            public List<GroupBasicDto> Groups { get; set; } = new();
         }
 
         public class CourseWithGroupGetByIdDto
@@ -19,7 +21,7 @@ namespace UniversityPersonalAccount.Models.DTOs.Course
             public int Id { get; set; }
             public CourseName CourseName { get; set; }
             public DegreeLevel DegreeLevel { get; set; }
-            public int? GroupId { get; set; }
+            public string? GroupName { get; set; }
 
         }
 

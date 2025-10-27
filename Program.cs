@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using UniversityPersonalAccount.Data;
 using UniversityPersonalAccount.Mappings;
@@ -43,10 +42,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
-
-
 
 app.UseHttpsRedirection();
 app.MapControllers();
