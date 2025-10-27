@@ -17,7 +17,6 @@ namespace UniversityPersonalAccount.Models.DTOs
         public ClassNumber ClassNumber { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
-        public HalfYearBasicDto? HalfYear { get; set; }
     }
 
     public class SessionCreateDto
@@ -25,7 +24,7 @@ namespace UniversityPersonalAccount.Models.DTOs
         public ClassNumber ClassNumber { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
-        public int HalfYearId { get; set; }
+      
     }
 
     public class SessionUpdateDto
@@ -34,7 +33,6 @@ namespace UniversityPersonalAccount.Models.DTOs
         public ClassNumber ClassNumber { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
-        public int HalfYearId { get; set; }
     }
 
     public class SessionBasicDto

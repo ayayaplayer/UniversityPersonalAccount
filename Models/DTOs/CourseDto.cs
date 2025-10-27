@@ -13,8 +13,7 @@ namespace UniversityPersonalAccount.Models.DTOs
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? DegreeLevel { get; set; }
-        public List<GroupBasicDto> Groups { get; set; } = new();
-        public int StudentCount { get; set; }
+        
     }
 
     public class CourseCreateDto

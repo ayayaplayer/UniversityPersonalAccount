@@ -35,7 +35,7 @@ namespace UniversityPersonalAccount.Models.Entities
     {
         public int Id { get; set; }
 
-        public int ClassNumber { get; set; }
+        public ClassNumber ClassNumber { get; set; } = ClassNumber.First;
         public TimeOnly StartTime { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
         public TimeOnly EndTime { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
         public int HalfYearId { get; set; }

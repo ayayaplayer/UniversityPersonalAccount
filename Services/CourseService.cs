@@ -38,9 +38,7 @@ namespace UniversityPersonalAccount.Services
         {
             try
             {
-                return _context.Courses
-                    .Include(c => c.Groups)
-                    .Include(c => c.Students)
+                return _context.Courses        
                     .FirstOrDefault(c => c.Id == id);
             }
             catch (Exception ex)

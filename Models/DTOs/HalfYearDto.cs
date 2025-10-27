@@ -12,7 +12,7 @@ namespace UniversityPersonalAccount.Models.DTOs
         public int Id { get; set; }
         public DateOnly DateStart { get; set; }
         public DateOnly DateEnd { get; set; }
-        public List<SessionBasicDto> Sessions { get; set; } = new();
+      
     }
 
     public class HalfYearCreateDto

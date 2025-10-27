@@ -41,7 +41,6 @@ public class HalfYearService : IHalfYearService
             try
             {
                 return _context.HalfYears
-                    .Include(h => h.Sessions)
                     .FirstOrDefault(h => h.Id == id);
             }
             catch (Exception ex)

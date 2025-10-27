@@ -36,9 +36,7 @@ public class StudentService : IStudentService
         {
             try
             {
-                return _context.Students
-                    .Include(s => s.group)
-                    .Include(s => s.Courses)
+                return _context.Students                    
                     .FirstOrDefault(s => s.Id == id);
             }
             catch (Exception ex)
@@ -58,9 +56,7 @@ public class StudentService : IStudentService
                 if (string.IsNullOrWhiteSpace(dto.Email))
                     throw new ArgumentException("Email не может быть пустым");
 
-                var group = _context.Groups.Find(dto.GroupId);
-                if (group == null)
-                    throw new KeyNotFoundException($"Группа с ID {dto.GroupId} не найдена");
+                
 
                 var student = _mapper.Map<Student>(dto);
                 _context.Students.Add(student);
@@ -83,10 +79,6 @@ public class StudentService : IStudentService
                 var student = _context.Students.Find(dto.Id);
                 if (student == null)
                     throw new KeyNotFoundException($"Студент с ID {dto.Id} не найден");
-
-                var group = _context.Groups.Find(dto.GroupId);
-                if (group == null)
-                    throw new KeyNotFoundException($"Группа с ID {dto.GroupId} не найдена");
 
                 _mapper.Map(dto, student);
                 _context.Students.Update(student);

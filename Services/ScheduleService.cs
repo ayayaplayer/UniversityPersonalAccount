@@ -38,9 +38,7 @@ public class ScheduleService : IScheduleService
     {
         try
         {
-            return _context.Schedules
-                .Include(s => s.Groups)
-                .Include(s => s.Sessions)
+            return _context.Schedules               
                 .FirstOrDefault(s => s.Id == id);
         }
         catch (Exception ex)

@@ -15,8 +15,7 @@ namespace UniversityPersonalAccount.Models.DTOs
         public string? Name { get; set; }
         public string? Surname { get; set; }
         public string Email { get; set; } = string.Empty;
-        public GroupBasicDto? Group { get; set; }
-        public List<CourseBasicDto> Courses { get; set; } = new();
+        
     }
 
     public class StudentCreateDto

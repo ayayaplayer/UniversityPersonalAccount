@@ -39,8 +39,7 @@ public class FacultyService : IFacultyService
     {
         try
         {
-            return _context.Faculties
-                .Include(f => f.Groups)
+            return _context.Faculties               
                 .FirstOrDefault(f => f.Id == id);
         }
         catch (Exception ex)

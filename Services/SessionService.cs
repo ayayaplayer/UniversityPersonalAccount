@@ -42,7 +42,6 @@ public class SessionService : ISessionService
             try
             {
                 return _context.Sessions
-                    .Include(s => s.HalfYear)
                     .FirstOrDefault(s => s.Id == id);
             }
             catch (Exception ex)
@@ -59,15 +58,13 @@ public class SessionService : ISessionService
                 if (dto.EndTime <= dto.StartTime)
                     throw new ArgumentException("Время окончания должно быть позже времени начала");
 
-                var halfYear = _context.HalfYears.Find(dto.HalfYearId);
-                if (halfYear == null)
-                    throw new KeyNotFoundException($"Полугодие с ID {dto.HalfYearId} не найдено");
+                
 
                 var session = _mapper.Map<Session>(dto);
                 _context.Sessions.Add(session);
                 _context.SaveChanges();
 
-                _logger.LogInformation($"Занятие в полугодие {dto.HalfYearId} успешно создано");
+                _logger.LogInformation($"Занятие успешно создано");
                 return session;
             }
             catch (Exception ex)
@@ -88,9 +85,7 @@ public class SessionService : ISessionService
                 if (dto.EndTime <= dto.StartTime)
                     throw new ArgumentException("Время окончания должно быть позже времени начала");
 
-                var halfYear = _context.HalfYears.Find(dto.HalfYearId);
-                if (halfYear == null)
-                    throw new KeyNotFoundException($"Полугодие с ID {dto.HalfYearId} не найдено");
+               
 
                 _mapper.Map(dto, session);
                 _context.Sessions.Update(session);

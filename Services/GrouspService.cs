@@ -24,7 +24,8 @@ public class GroupService : IGroupService
     {
         try
         {
-            return _context.Groups.Include(g => g.Faculty).ToList();
+            return _context.Groups
+                .ToList();
         }
         catch (Exception ex)
         {
@@ -38,9 +39,6 @@ public class GroupService : IGroupService
         try
         {
             return _context.Groups
-                .Include(g => g.Faculty)
-                .Include(g => g.Students)
-                .Include(g => g.Courses)
                 .FirstOrDefault(g => g.Id == id);
         }
         catch (Exception ex)
@@ -56,11 +54,6 @@ public class GroupService : IGroupService
         {
             if (string.IsNullOrWhiteSpace(dto.GroupName))
                 throw new ArgumentException("Название группы не может быть пустым");
-
-            var faculty = _context.Faculties.Find(dto.FacultyId);
-            if (faculty == null)
-                throw new KeyNotFoundException($"Факультет с ID {dto.FacultyId} не найден");
-
             var group = _mapper.Map<Group>(dto);
             _context.Groups.Add(group);
             _context.SaveChanges();
@@ -79,13 +72,12 @@ public class GroupService : IGroupService
     {
         try
         {
-            var group = _context.Groups.Find(dto.Id);
+            var group = _context.Groups
+                .Find(dto.Id);
             if (group == null)
                 throw new KeyNotFoundException($"Группа с ID {dto.Id} не найдена");
 
-            var faculty = _context.Faculties.Find(dto.FacultyId);
-            if (faculty == null)
-                throw new KeyNotFoundException($"Факультет с ID {dto.FacultyId} не найден");
+          
 
             _mapper.Map(dto, group);
             _context.Groups.Update(group);
