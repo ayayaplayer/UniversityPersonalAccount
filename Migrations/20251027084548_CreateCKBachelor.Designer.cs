@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniversityPersonalAccount.Data;
@@ -11,9 +12,11 @@ using UniversityPersonalAccount.Data;
 namespace UniversityPersonalAccount.Migrations
 {
     [DbContext(typeof(PersonalAccountDbContext))]
-    partial class PersonalAccountDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251027084548_CreateCKBachelor")]
+    partial class CreateCKBachelor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -70,7 +73,7 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.ToTable("Courses", t =>
                         {
-                            t.HasCheckConstraint("CKDegreeCourseValid", "\r\n        (\"DegreeLevel\" = 1 AND \"CourseName\" > 0 AND \"CourseName\" < 5)\r\n        OR\r\n        (\"DegreeLevel\" = 2 AND \"CourseName\" > 0 AND \"CourseName\" < 3)\r\n        OR\r\n        (\"DegreeLevel\" = 3 AND \"CourseName\" > 0 AND \"CourseName\" < 4)\r\n    ");
+                            t.HasCheckConstraint("CKBachelor", " \"DegreeLevel\" = 1 AND \"CourseName\" > 0 AND  \"CourseName\" < 6  ");
                         });
                 });
 

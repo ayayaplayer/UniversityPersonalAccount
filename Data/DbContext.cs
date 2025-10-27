@@ -46,7 +46,16 @@ public class PersonalAccountDbContext : DbContext
             .ToTable(t => t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\" < "));
         modelBuilder.Entity<Student>()
             .ToTable(t => t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' "));
+        modelBuilder.Entity<Course>()
+    .ToTable(t => t.HasCheckConstraint("CKDegreeCourseValid", @"
+        (""DegreeLevel"" = 1 AND ""CourseName"" > 0 AND ""CourseName"" < 5)
+        OR
+        (""DegreeLevel"" = 2 AND ""CourseName"" > 0 AND ""CourseName"" < 3)
+        OR
+        (""DegreeLevel"" = 3 AND ""CourseName"" > 0 AND ""CourseName"" < 4)
+    "));
     }
+    
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseNpgsql("Host=localhost;Port=5432;Database=PersonalAccountDb;Username=postgres;Password=password");

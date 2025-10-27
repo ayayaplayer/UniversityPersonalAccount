@@ -14,10 +14,7 @@ namespace UniversityPersonalAccount.Models.Entities
         Third = 3,
 
         [Display(Name = "Четвертый")]
-        Fourth = 4,
-
-        [Display(Name = "Пятый")]
-        Fifth = 5     
+        Fourth = 4,   
     }
 
     public enum DegreeLevel
@@ -29,9 +26,7 @@ namespace UniversityPersonalAccount.Models.Entities
         Second = 2,
 
         [Display(Name = "Аспирантура")]
-        Third = 3,
-
-        
+        Third = 3,     
     }
 
     public class Course
