@@ -1,4 +1,4 @@
-using UniversityPersonalAccount.Models.DTOs;
+using UniversityPersonalAccount.Models.DTOs.Session;
 using UniversityPersonalAccount.Models.Entities;
 
 namespace UniversityPersonalAccount.Services.Interfaces

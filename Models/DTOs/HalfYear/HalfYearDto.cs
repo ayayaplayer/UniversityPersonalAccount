@@ -1,4 +1,4 @@
-namespace UniversityPersonalAccount.Models.DTOs
+namespace UniversityPersonalAccount.Models.DTOs.HalfYear
 { 
   public class HalfYearGetAllDto
     {

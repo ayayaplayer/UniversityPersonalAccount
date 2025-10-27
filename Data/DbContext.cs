@@ -39,13 +39,13 @@ public class PersonalAccountDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Session>()
-            .ToTable(t => t.HasCheckConstraint("CKDayOfWeek", " \"DayOfWeek\" > 0 AND \"DayOfWeek\" < 8"));
+            .ToTable(t => t.HasCheckConstraint("CKClassNumber", " \"ClassNumber\" > 0 AND \"ClassNumber\" < 8"));
         modelBuilder.Entity<Session>()
            .ToTable(t => t.HasCheckConstraint("CKValidateSessionTime", " \"EndTime\" >  \"StartTime\" "));
         modelBuilder.Entity<HalfYear>()
             .ToTable(t => t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\" < "));
         modelBuilder.Entity<Student>()
-            .ToTable(t => t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~  '^.*$' "));
+            .ToTable(t => t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' "));
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)

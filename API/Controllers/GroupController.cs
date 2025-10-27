@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UniversityPersonalAccount.Models.DTOs;
+using UniversityPersonalAccount.Models.DTOs.Group;
 using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Controllers

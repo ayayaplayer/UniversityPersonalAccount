@@ -1,4 +1,4 @@
-using UniversityPersonalAccount.Models.DTOs;
+using UniversityPersonalAccount.Models.DTOs.HalfYear;
 using UniversityPersonalAccount.Models.Entities;
 
 

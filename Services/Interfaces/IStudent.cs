@@ -1,5 +1,5 @@
 using UniversityPersonalAccount.Models.Entities;
-using UniversityPersonalAccount.Models.DTOs;
+using UniversityPersonalAccount.Models.DTOs.Student;
 
 namespace UniversityPersonalAccount.Services.Interfaces
 {

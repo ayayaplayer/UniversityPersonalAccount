@@ -1,6 +1,6 @@
 using UniversityPersonalAccount.Models.Entities;
 
-namespace UniversityPersonalAccount.Models.DTOs
+namespace UniversityPersonalAccount.Models.DTOs.Session
 
 {
     public class SessionGetAllDto

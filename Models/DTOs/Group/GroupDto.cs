@@ -1,13 +1,10 @@
-namespace UniversityPersonalAccount.Models.DTOs
+namespace UniversityPersonalAccount.Models.DTOs.Group
 
 {
     public class GroupGetAllDto
     {
         public int Id { get; set; }
         public string GroupName { get; set; } = string.Empty;
-
-        
-       
     }
 
     public class GroupGetByIdDto

@@ -1,9 +1,10 @@
 using UniversityPersonalAccount.Data;
 using UniversityPersonalAccount.Models.Entities;
-using UniversityPersonalAccount.Models.DTOs;
 using UniversityPersonalAccount.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using UniversityPersonalAccount.Models.DTOs.Course;
+using Microsoft.OpenApi.Extensions;
 
 namespace UniversityPersonalAccount.Services
 {
@@ -52,14 +53,14 @@ namespace UniversityPersonalAccount.Services
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(dto.Name))
+                if (string.IsNullOrWhiteSpace(dto.CourseName.ToString()))
                     throw new ArgumentException("Название курса не может быть пустым");
 
                 var course = _mapper.Map<Course>(dto);
                 _context.Courses.Add(course);
                 _context.SaveChanges();
 
-                _logger.LogInformation($"Курс '{dto.Name}' успешно создан");
+                _logger.LogInformation($"Курс '{dto.CourseName.GetDisplayName}' успешно создан");
                 return course;
             }
             catch (Exception ex)

@@ -1,6 +1,12 @@
 using AutoMapper;
 using UniversityPersonalAccount.Models.Entities;
-using UniversityPersonalAccount.Models.DTOs;
+using UniversityPersonalAccount.Models.DTOs.Course;
+using UniversityPersonalAccount.Models.DTOs.Faculty;
+using UniversityPersonalAccount.Models.DTOs.Group;
+using UniversityPersonalAccount.Models.DTOs.HalfYear;
+using UniversityPersonalAccount.Models.DTOs.Schedule;
+using UniversityPersonalAccount.Models.DTOs.Session;
+using UniversityPersonalAccount.Models.DTOs.Student;
 
 
 namespace UniversityPersonalAccount.Mappings
@@ -61,6 +67,11 @@ namespace UniversityPersonalAccount.Mappings
             CreateMap<Schedule, ScheduleGetByIdDto>();             
             CreateMap<ScheduleCreateDto, Schedule>();
             CreateMap<ScheduleUpdateDto, Schedule>();
+
+
+
+            CreateMap<Course, CourseWithGroupGetAllDto>();
+            CreateMap<Course, CourseWithGroupGetByIdDto>();
         }
     }
 }

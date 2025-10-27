@@ -1,9 +1,9 @@
 using UniversityPersonalAccount.Data;
 using UniversityPersonalAccount.Models.Entities;
-using UniversityPersonalAccount.Models.DTOs;
 using UniversityPersonalAccount.Services.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using UniversityPersonalAccount.Models.DTOs.Student;
 
 namespace UniversityPersonalAccount.Services;
 public class StudentService : IStudentService

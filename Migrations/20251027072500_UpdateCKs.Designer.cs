@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using UniversityPersonalAccount.Data;
@@ -11,9 +12,11 @@ using UniversityPersonalAccount.Data;
 namespace UniversityPersonalAccount.Migrations
 {
     [DbContext(typeof(PersonalAccountDbContext))]
-    partial class PersonalAccountDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251027072500_UpdateCKs")]
+    partial class UpdateCKs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,11 +63,11 @@ namespace UniversityPersonalAccount.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CourseName")
-                        .HasColumnType("integer");
+                    b.Property<string>("DegreeLevel")
+                        .HasColumnType("text");
 
-                    b.Property<int>("DegreeLevel")
-                        .HasColumnType("integer");
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

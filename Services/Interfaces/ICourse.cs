@@ -1,7 +1,7 @@
 using UniversityPersonalAccount.Models.Entities;
-using  UniversityPersonalAccount.Models.DTOs;
+using UniversityPersonalAccount.Models.DTOs.Course;
 
-    
+
 
 namespace UniversityPersonalAccount.Services.Interfaces
 {

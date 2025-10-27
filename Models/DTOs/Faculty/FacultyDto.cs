@@ -1,4 +1,4 @@
-namespace UniversityPersonalAccount.Models.DTOs
+namespace UniversityPersonalAccount.Models.DTOs.Faculty
 {
     
      public class FacultyGetAllDto

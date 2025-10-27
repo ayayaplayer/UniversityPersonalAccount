@@ -1,7 +1,7 @@
-using UniversityPersonalAccount.Models.DTOs;
+using UniversityPersonalAccount.Models.DTOs.Faculty;
 using UniversityPersonalAccount.Models.Entities;
 
- namespace UniversityPersonalAccount.Services.Interfaces
+namespace UniversityPersonalAccount.Services.Interfaces
  {
     public interface IFacultyService
     {
