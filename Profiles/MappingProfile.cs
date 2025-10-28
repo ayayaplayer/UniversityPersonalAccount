@@ -1,12 +1,6 @@
 using AutoMapper;
+using UniversityPersonalAccount.Models.DTOs;
 using UniversityPersonalAccount.Models.Entities;
-using UniversityPersonalAccount.Models.DTOs.Course;
-using UniversityPersonalAccount.Models.DTOs.Faculty;
-using UniversityPersonalAccount.Models.DTOs.Group;
-using UniversityPersonalAccount.Models.DTOs.HalfYear;
-using UniversityPersonalAccount.Models.DTOs.Schedule;
-using UniversityPersonalAccount.Models.DTOs.Session;
-using UniversityPersonalAccount.Models.DTOs.Student;
 
 
 namespace UniversityPersonalAccount.Mappings
@@ -15,59 +9,42 @@ namespace UniversityPersonalAccount.Mappings
     {
         public MappingProfile()
         {
-           
-            CreateMap<Course, CourseGetAllDto>();
-            CreateMap<Course, CourseGetByIdDto>();
-            CreateMap<CourseCreateDto, Course>();
-            CreateMap<CourseUpdateDto, Course>();
-            CreateMap<Course, CourseBasicDto>();
+             CreateMap<Faculty, FacultyDto>()
+            .ForMember(d => d.Groups, opt => opt.MapFrom(s => s.Groups));
 
-            
-            CreateMap<Faculty, FacultyGetAllDto>();
-            CreateMap<Faculty, FacultyGetByIdDto>();
-                
-            CreateMap<FacultyCreateDto, Faculty>();
-            CreateMap<FacultyUpdateDto, Faculty>();
-            CreateMap<Faculty, FacultyBasicDto>();
-
-
-            CreateMap<Group, GroupGetAllDto>();
-
-
-            CreateMap<Group, GroupGetByIdDto>();
-               
-            CreateMap<GroupCreateDto, Group>();
-            CreateMap<GroupUpdateDto, Group>();
-            CreateMap<Group, GroupBasicDto>();
+        CreateMap<Group, GroupDto>()
+            .ForMember(d => d.Students, opt => opt.MapFrom(s => s.Students))
+            .ForMember(d => d.FacultyId, opt => opt.MapFrom(s => s.FacultyId))
+            .ForMember(d => d.CourseId, opt => opt.MapFrom(s => s.CourseId));
 
         
-            CreateMap<Student, StudentGetAllDto>();
-            CreateMap<Student, StudentGetByIdDto>();
-            CreateMap<StudentCreateDto, Student>();
-            CreateMap<StudentUpdateDto, Student>();
-            CreateMap<Student, StudentBasicDto>();
+        CreateMap<Group, GroupShortDto>();
+        CreateMap<Student, StudentShortDto>()
+            .ForMember(d => d.FullName, opt => opt.MapFrom(s => $"{s.Name} {s.Surname}".Trim()));
+        CreateMap<Session, SessionShortDto>();
 
-           
-            CreateMap<HalfYear, HalfYearGetAllDto>();
-            CreateMap<HalfYear, HalfYearGetByIdDto>();
-                
-            CreateMap<HalfYearCreateDto, HalfYear>();
-            CreateMap<HalfYearUpdateDto, HalfYear>();
-            CreateMap<HalfYear, HalfYearBasicDto>();
+        
+        CreateMap<Student, StudentDto>().ReverseMap();
 
-           
-            CreateMap<Session, SessionGetAllDto>();
-            CreateMap<Session, SessionGetByIdDto>();              
-            CreateMap<SessionCreateDto, Session>();
-            CreateMap<SessionUpdateDto, Session>();
-            CreateMap<Session, SessionBasicDto>();
+        
+        CreateMap<Course, CourseDto>()
+            .ForMember(d => d.CourseName, opt => opt.MapFrom(s => s.CourseName.ToString()))
+            .ForMember(d => d.Groups, opt => opt.MapFrom(s => s.Groups))
+            .ForMember(d => d.Students, opt => opt.MapFrom(s => s.Students));
 
-           
-            CreateMap<Schedule, ScheduleGetAllDto>();
-            CreateMap<Schedule, ScheduleGetByIdDto>();             
-            CreateMap<ScheduleCreateDto, Schedule>();
-            CreateMap<ScheduleUpdateDto, Schedule>();
+        
+        CreateMap<HalfYear, HalfYearDto>()
+            .ForMember(d => d.Sessions, opt => opt.MapFrom(s => s.Sessions));
 
+        
+        CreateMap<Session, SessionDto>()
+            .ForMember(d => d.ClassNumber, opt => opt.MapFrom(s => s.ClassNumber.ToString()));
+
+        
+        CreateMap<Schedule, ScheduleDto>()
+            .ForMember(d => d.Groups, opt => opt.MapFrom(s => s.Groups))
+            .ForMember(d => d.Sessions, opt => opt.MapFrom(s => s.Sessions));
+            
         }
     }
 }
