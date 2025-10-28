@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UniversityPersonalAccount.Models.DTOs;
-using UniversityPersonalAccount.Services;
+using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Controllers
 {
@@ -8,9 +8,9 @@ namespace UniversityPersonalAccount.Controllers
     [Route("api/[controller]")]
     public class HalfYearController : ControllerBase
     {
-        private readonly HalfYearService _service;
+        private readonly IHalfYearService _service;
 
-        public HalfYearController(HalfYearService service)
+        public HalfYearController(IHalfYearService service)
         {
             _service = service;
         }

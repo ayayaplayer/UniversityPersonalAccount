@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UniversityPersonalAccount.Models.DTOs;
-using UniversityPersonalAccount.Services;
+using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Controllers
 {
@@ -8,9 +8,9 @@ namespace UniversityPersonalAccount.Controllers
     [Route("api/[controller]")]
     public class GroupController : ControllerBase
     {
-        private readonly GroupService _service;
+        private readonly IGroupService _service;
 
-        public GroupController(GroupService service)
+        public GroupController(IGroupService service)
         {
             _service = service;
         }

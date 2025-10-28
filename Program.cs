@@ -42,7 +42,7 @@ try
 {
     var serviceProvider = app.Services;
     
-    // Попробуйте получить CourseService
+  
     var courseService = serviceProvider.GetRequiredService<ICourseService>();
     Console.WriteLine("✅ CourseService успешно разрешён");
 }

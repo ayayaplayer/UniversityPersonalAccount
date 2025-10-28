@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using UniversityPersonalAccount.Models.DTOs;
-using UniversityPersonalAccount.Services;
+using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Controllers
 {
@@ -8,9 +8,9 @@ namespace UniversityPersonalAccount.Controllers
     [Route("api/[controller]")]
     public class SessionController : ControllerBase
     {
-        private readonly SessionService _service;
+        private readonly ISessionService _service;
 
-        public SessionController(SessionService service)
+        public SessionController(ISessionService service)
         {
             _service = service;
         }

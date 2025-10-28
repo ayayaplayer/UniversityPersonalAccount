@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using UniversityPersonalAccount.Services;
+using UniversityPersonalAccount.Services.Interfaces;
 using UniversityPersonalAccount.Models.DTOs;
 
 namespace UniversityPersonalAccount.Controllers
@@ -8,9 +8,9 @@ namespace UniversityPersonalAccount.Controllers
     [Route("api/[controller]")]
     public class FacultyController : ControllerBase
     {
-        private readonly FacultyService _service;
+        private readonly IFacultyService _service;
 
-        public FacultyController(FacultyService service)
+        public FacultyController(IFacultyService service)
         {
             _service = service;
         }

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using UniversityPersonalAccount.Models.DTOs;
-using UniversityPersonalAccount.Services;
+using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Controllers
 {
@@ -8,9 +8,9 @@ namespace UniversityPersonalAccount.Controllers
     [Route("api/[controller]")]
     public class ScheduleController : ControllerBase
     {
-        private readonly ScheduleService _service;
+        private readonly IScheduleService _service;
 
-        public ScheduleController(ScheduleService service)
+        public ScheduleController(IScheduleService service)
         {
             _service = service;
         }
