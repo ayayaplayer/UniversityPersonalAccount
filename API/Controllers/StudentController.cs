@@ -6,6 +6,10 @@ namespace UniversityPersonalAccount.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json")]
     public class StudentController : ControllerBase
     {
         private readonly IStudentService _service;
@@ -15,30 +19,45 @@ namespace UniversityPersonalAccount.Controllers
             _service = service;
         }
 
+        /// <summary>
+        /// Получение данных всех студентов 
+        /// </summary>
         [HttpGet]
         public IActionResult GetAll() => Ok(_service.GetAll());
 
+
+
+
+        /// <summary>
+        /// Получение данных о студенте по Id 
+        /// </summary>
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var result = _service.GetById(id);
             return result == null ? NotFound() : Ok(result);
         }
-
+        /// <summary>
+        /// Добавление данных о студенте 
+        /// </summary>
         [HttpPost]
         public IActionResult Create([FromBody] StudentDto dto)
         {
             var result = _service.Create(dto);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
-
+        /// <summary>
+        /// Обновление данных о студенте по Id 
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] StudentDto dto)
         {
             var result = _service.Update(id, dto);
             return result == null ? NotFound() : Ok(result);
         }
-
+        /// <summary>
+        /// Удаление данных о студенте по Id
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

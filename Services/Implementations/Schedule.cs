@@ -25,7 +25,7 @@ namespace UniversityPersonalAccount.Services
         {
             _logger.LogInformation("Получение списка расписаний");
             var schedules = _context.Schedules.Include(s => s.Groups).Include(s => s.Sessions).ToList();
-            return _mapper.Map<IEnumerable<ScheduleDto>>(schedules);
+            return _mapper.Map<List<ScheduleDto>>(schedules);
         }
 
         public ScheduleDto? GetById(int id)

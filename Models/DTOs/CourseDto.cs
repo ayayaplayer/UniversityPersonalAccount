@@ -9,7 +9,7 @@ namespace UniversityPersonalAccount.Models.DTOs
         public int DegreeLevel { get; set; }
 
         
-        public List<GroupShortDto>? Groups { get; set; }
-        public List<StudentShortDto>? Students { get; set; }
+        public List<GroupBaseDto>? Groups { get; set; }
+        public List<StudentBaseDto>? Students { get; set; }
     }
 }

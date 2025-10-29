@@ -5,6 +5,6 @@ namespace UniversityPersonalAccount.Models.DTOs
         public int Id { get; set; }
         public string? Name { get; set; }
 
-        public List<GroupShortDto>? Groups { get; set; }
+        public List<GroupBaseDto>? Groups { get; set; }
     }
 }

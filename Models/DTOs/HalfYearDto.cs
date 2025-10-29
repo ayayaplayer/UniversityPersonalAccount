@@ -6,6 +6,7 @@ namespace UniversityPersonalAccount.Models.DTOs
         public DateOnly DateStart { get; set; }
         public DateOnly DateEnd { get; set; }
 
-        public List<SessionShortDto>? Sessions { get; set; }
+        public int HalfYearId { get; set; }
+        public List<SessionBaseDto>? Sessions { get; set; }
     }
 }

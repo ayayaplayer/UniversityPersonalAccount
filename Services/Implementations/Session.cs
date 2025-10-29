@@ -25,7 +25,7 @@ namespace UniversityPersonalAccount.Services
         {
             _logger.LogInformation("Получение всех сессий");
             var sessions = _context.Sessions.ToList();
-            return _mapper.Map<List<SessionDto>>(sessions);
+            return _mapper.Map<IEnumerable<SessionDto>>(sessions);
         }
 
         public SessionDto? GetById(int id)

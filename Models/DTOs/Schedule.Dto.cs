@@ -6,7 +6,9 @@ namespace UniversityPersonalAccount.Models.DTOs
         public string? SubjectName { get; set; }
         public string? Classroom { get; set; }
 
-        public List<GroupShortDto>? Groups { get; set; }
-        public List<SessionShortDto>? Sessions { get; set; }
-    }
+        public List<GroupBaseDto>? Groups { get; set; }
+        public List<SessionBaseDto>? Sessions { get; set; }
+     }
+
+    
 }

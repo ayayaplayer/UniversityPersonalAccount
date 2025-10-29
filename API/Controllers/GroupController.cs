@@ -6,6 +6,10 @@ namespace UniversityPersonalAccount.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json")]
     public class GroupController : ControllerBase
     {
         private readonly IGroupService _service;
@@ -14,10 +18,14 @@ namespace UniversityPersonalAccount.Controllers
         {
             _service = service;
         }
-
+        /// <summary>
+        /// Получение данных всех групп и студентов в них
+        /// </summary>
         [HttpGet]
         public IActionResult GetAll() => Ok(_service.GetAll());
-
+        /// <summary>
+        /// Получение данных группы и студентов в ней по Id
+        /// </summary>
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -25,6 +33,9 @@ namespace UniversityPersonalAccount.Controllers
             return result == null ? NotFound() : Ok(result);
         }
 
+        /// <summary>
+        /// Добавление данных группы и студентов в нее
+        /// </summary>
         [HttpPost]
         public IActionResult Create([FromBody] GroupDto dto)
         {
@@ -32,6 +43,9 @@ namespace UniversityPersonalAccount.Controllers
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
+        /// <summary>
+        /// Изменение данных группы и студетов в ней
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] GroupDto dto)
         {
@@ -39,6 +53,10 @@ namespace UniversityPersonalAccount.Controllers
             return result == null ? NotFound() : Ok(result);
         }
 
+
+        /// <summary>
+        /// Удаление данных группы и студетов в ней
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

@@ -36,7 +36,7 @@ namespace UniversityPersonalAccount.Services
 
         public StudentDto Create(StudentDto dto)
         {
-            _logger.LogInformation("Создание студента: {Name} {Surname}", dto.Name, dto.Surname);
+            _logger.LogInformation("Создание студента: {Name} {Surname}", dto.Name, dto.SurName);
             var entity = _mapper.Map<Student>(dto);
             _context.Students.Add(entity);
             _context.SaveChanges();
@@ -50,9 +50,9 @@ namespace UniversityPersonalAccount.Services
             if (entity == null) return null;
 
             entity.Name = dto.Name;
-            entity.Surname = dto.Surname;
+            entity.Surname = dto.SurName;
             entity.Email = dto.Email;
-            entity.GroupId = dto.GroupId;
+
             _context.SaveChanges();
 
             return _mapper.Map<StudentDto>(entity);

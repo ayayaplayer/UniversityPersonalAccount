@@ -20,7 +20,7 @@ namespace UniversityPersonalAccount.Services
             _mapper = mapper;
             _logger = logger;
         }
-
+        
         public IEnumerable<HalfYearDto> GetAll()
         {
             _logger.LogInformation("Получение списка полугодий");

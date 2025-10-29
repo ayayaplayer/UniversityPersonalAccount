@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 using UniversityPersonalAccount.Data;
 using UniversityPersonalAccount.Mappings;
 using UniversityPersonalAccount.Services;
@@ -25,7 +27,18 @@ builder.Services.AddDbContext<PersonalAccountDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => 
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "UniversityPersonalAccount API",
+        Description = "ASP.NET Core Web API for University Schedule",
+    });
+
+    var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,xmlFileName));
+});
 
 var app = builder.Build();
 
@@ -38,21 +51,4 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
-try
-{
-    var serviceProvider = app.Services;
-    
-  
-    var courseService = serviceProvider.GetRequiredService<ICourseService>();
-    Console.WriteLine("✅ CourseService успешно разрешён");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Ошибка: {ex.Message}");
-    if (ex.InnerException != null)
-    {
-        Console.WriteLine($"InnerException: {ex.InnerException.Message}");
-    }
-}
-
 app.Run();

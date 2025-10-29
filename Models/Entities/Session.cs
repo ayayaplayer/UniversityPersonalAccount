@@ -38,6 +38,8 @@ namespace UniversityPersonalAccount.Models.Entities
         public ClassNumber ClassNumber { get; set; } = ClassNumber.First;
         public TimeOnly StartTime { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
         public TimeOnly EndTime { get; set; } = TimeOnly.FromDateTime(DateTime.Now);
+
+        public int ScheduleId { get; set; }
         public int HalfYearId { get; set; }
         public HalfYear HalfYear { get; set; } = null!;
 
