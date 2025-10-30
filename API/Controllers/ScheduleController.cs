@@ -6,6 +6,10 @@ namespace UniversityPersonalAccount.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json")]
     public class ScheduleController : ControllerBase
     {
         private readonly IScheduleService _service;
@@ -16,14 +20,18 @@ namespace UniversityPersonalAccount.Controllers
             _service = service;
             _logger = logger;
         }
-
+        /// <summary>
+        /// Получение данных всех рассписаний с названием предмета, номером аудитории, группой 
+        /// </summary>
         [HttpGet]
         public IActionResult GetAll()
         {
             _logger.LogInformation("Получение расписаний");
             return Ok(_service.GetAll());
         }
-
+         /// <summary>
+        /// Получение данных всех рассписаний с названием предмета, номером аудитории, группой по Id 
+        /// </summary>
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -33,7 +41,9 @@ namespace UniversityPersonalAccount.Controllers
 
             return Ok(result);
         }
-
+        /// <summary>
+        /// Добавление  данных рассписаний с названием предмета, номером аудитории, группой 
+        /// </summary>
         [HttpPost]
         public IActionResult Create([FromBody] ScheduleDto dto)
         {
@@ -41,7 +51,9 @@ namespace UniversityPersonalAccount.Controllers
             var created = _service.Create(dto);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
-
+        /// <summary>
+        /// Обновление данных рассписания с названием предмета, номером аудитории, группой по Id
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] ScheduleDto dto)
         {
@@ -51,7 +63,9 @@ namespace UniversityPersonalAccount.Controllers
 
             return Ok(updated);
         }
-
+        /// <summary>
+        /// Удаление данных рассписания с названием предмета, номером аудитории, группой по Id 
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

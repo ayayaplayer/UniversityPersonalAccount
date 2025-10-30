@@ -4,7 +4,8 @@ using UniversityPersonalAccount.Mappings;
 using UniversityPersonalAccount.Services;
 using UniversityPersonalAccount.Services.Interfaces;
 using UniversityPersonalAccount.Middlewares;
-
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 
 
@@ -25,7 +26,18 @@ builder.Services.AddDbContext<PersonalAccountDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => 
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "UniversityPersonalAccount API",
+        Description = "ASP.NET Core Web API for University Schedule",
+    });
+
+    var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory,xmlFileName));
+});
 
 var app = builder.Build();
 

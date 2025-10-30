@@ -6,6 +6,10 @@ namespace UniversityPersonalAccount.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Produces("application/json")]
     public class FacultyController : ControllerBase
     {
         private readonly IFacultyService _service;
@@ -16,14 +20,18 @@ namespace UniversityPersonalAccount.Controllers
             _service = service;
             _logger = logger;
         }
-
+        /// <summary>
+        /// Получение данных всех факультетов с группами
+        /// </summary>
         [HttpGet]
         public IActionResult GetAll()
         {
             _logger.LogInformation("Получение списка факультетов");
             return Ok(_service.GetAll());
         }
-
+        /// <summary>
+        /// Получение данных факультета с группами по Id
+        /// </summary>
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
@@ -36,7 +44,9 @@ namespace UniversityPersonalAccount.Controllers
 
             return Ok(result);
         }
-
+        /// <summary>
+        /// Добавление данных факультета с группой
+        /// </summary>
         [HttpPost]
         public IActionResult Create([FromBody] FacultyDto dto)
         {
@@ -44,7 +54,9 @@ namespace UniversityPersonalAccount.Controllers
             var created = _service.Create(dto);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
-
+        /// <summary>
+        /// Изменения данных факультета и групп в нём по Id
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] FacultyDto dto)
         {
@@ -58,7 +70,9 @@ namespace UniversityPersonalAccount.Controllers
 
             return Ok(updated);
         }
-
+        /// <summary>
+        /// Удаление данных факультета и групп в нём по Id
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
