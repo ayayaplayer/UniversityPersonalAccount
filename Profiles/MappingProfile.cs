@@ -9,42 +9,45 @@ namespace UniversityPersonalAccount.Mappings
     {
         public MappingProfile()
         {
-             CreateMap<Faculty, FacultyDto>()
-            .ForMember(d => d.Groups, opt => opt.MapFrom(s => s.Groups));
+             
+            CreateMap<Faculty, FacultyDto>()
+                .ForMember(dest => dest.Groups, opt => opt.MapFrom(src => src.Groups)).ReverseMap();
 
-        CreateMap<Group, GroupDto>()
-            .ForMember(d => d.Students, opt => opt.MapFrom(s => s.Students))
-            .ForMember(d => d.FacultyId, opt => opt.MapFrom(s => s.FacultyId))
-            .ForMember(d => d.CourseId, opt => opt.MapFrom(s => s.CourseId));
-
-        
-        CreateMap<Group, GroupShortDto>();
-        CreateMap<Student, StudentShortDto>()
-            .ForMember(d => d.FullName, opt => opt.MapFrom(s => $"{s.Name} {s.Surname}".Trim()));
-        CreateMap<Session, SessionShortDto>();
-
-        
-        CreateMap<Student, StudentDto>().ReverseMap();
-
-        
-        CreateMap<Course, CourseDto>()
-            .ForMember(d => d.CourseName, opt => opt.MapFrom(s => s.CourseName.ToString()))
-            .ForMember(d => d.Groups, opt => opt.MapFrom(s => s.Groups))
-            .ForMember(d => d.Students, opt => opt.MapFrom(s => s.Students));
-
-        
-        CreateMap<HalfYear, HalfYearDto>()
-            .ForMember(d => d.Sessions, opt => opt.MapFrom(s => s.Sessions));
-
-        
-        CreateMap<Session, SessionDto>()
-            .ForMember(d => d.ClassNumber, opt => opt.MapFrom(s => s.ClassNumber.ToString()));
-
-        
-        CreateMap<Schedule, ScheduleDto>()
-            .ForMember(d => d.Groups, opt => opt.MapFrom(s => s.Groups))
-            .ForMember(d => d.Sessions, opt => opt.MapFrom(s => s.Sessions));
             
+            CreateMap<Course, CourseDto>()
+                .ForMember(dest => dest.CourseName, opt => opt.MapFrom(src => src.CourseName.ToString()))
+                .ForMember(dest => dest.Groups, opt => opt.MapFrom(src => src.Groups))
+                .ForMember(dest => dest.Students, opt => opt.MapFrom(src => src.Students)).ReverseMap();
+
+            
+            CreateMap<Group, GroupDto>()
+                .ForMember(dest => dest.Students, opt => opt.MapFrom(src => src.Students))
+                .ForMember(dest => dest.CourseId, opt => opt.MapFrom(src => src.CourseId))
+                .ForMember(dest => dest.FacultyId, opt => opt.MapFrom(src => src.FacultyId)).ReverseMap();
+
+            
+            CreateMap<HalfYear, HalfYearDto>()
+                .ForMember(dest => dest.Sessions, opt => opt.MapFrom(src => src.Sessions)).ReverseMap();
+
+            
+          CreateMap<Schedule, ScheduleDto>()
+    .ForMember(dest => dest.GroupIds, opt => opt.MapFrom(src => src.Groups.Select(g => g.Id)))
+    .ForMember(dest => dest.SessionIds, opt => opt.MapFrom(src => src.Sessions.Select(s => s.Id)))
+    .ReverseMap()
+    .ForMember(dest => dest.Groups, opt => opt.Ignore())    // связи обрабатываем вручную
+    .ForMember(dest => dest.Sessions, opt => opt.Ignore());
+
+
+
+
+
+
+
+            CreateMap<Session, SessionDto>()
+                .ForMember(dest => dest.ClassNumber, opt => opt.MapFrom(src => src.ClassNumber.ToString())).ReverseMap();
+
+           
+            CreateMap<Student, StudentDto>().ReverseMap();
         }
     }
 }

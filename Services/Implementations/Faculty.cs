@@ -8,63 +8,38 @@ using UniversityPersonalAccount.Services.Interfaces;
 
 namespace UniversityPersonalAccount.Services
 {
-    public class FacultyService : IFacultyService
+    public class FacultyService : BaseCrudService<Faculty, FacultyDto>, IFacultyService
     {
-        private readonly PersonalAccountDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly ILogger<FacultyService> _logger;
-
         public FacultyService(PersonalAccountDbContext context, IMapper mapper, ILogger<FacultyService> logger)
+            : base(context, mapper, logger)
         {
-            _context = context;
-            _mapper = mapper;
-            _logger = logger;
         }
 
-        public IEnumerable<FacultyDto> GetAll()
+        public override IEnumerable<FacultyDto> GetAll()
         {
-            _logger.LogInformation("Получение всех факультетов");
-            var faculties = _context.Faculties.Include(f => f.Groups).ToList();
-            return _mapper.Map<List<FacultyDto>>(faculties);
+            _logger.LogInformation("Получение всех факультетов с группами");
+            var faculties = _context.Faculties
+                .Include(f => f.Groups)
+                .ThenInclude(g => g.Students)
+                .ToList();
+
+            return _mapper.Map<IEnumerable<FacultyDto>>(faculties);
         }
 
-        public FacultyDto? GetById(int id)
+        public override FacultyDto? GetById(int id)
         {
-            _logger.LogInformation("Получение факультета Id={Id}", id);
-            var faculty = _context.Faculties.Include(f => f.Groups).FirstOrDefault(f => f.Id == id);
-            return faculty == null ? null : _mapper.Map<FacultyDto>(faculty);
-        }
+            var faculty = _context.Faculties
+                .Include(f => f.Groups)
+                .ThenInclude(g => g.Students)
+                .FirstOrDefault(f => f.Id == id);
 
-        public FacultyDto Create(FacultyDto dto)
-        {
-            _logger.LogInformation("Создание нового факультета: {Name}", dto.Name);
-            var entity = _mapper.Map<Faculty>(dto);
-            _context.Faculties.Add(entity);
-            _context.SaveChanges();
-            return _mapper.Map<FacultyDto>(entity);
-        }
+            if (faculty == null)
+            {
+                _logger.LogWarning("Факультет с Id={Id} не найден", id);
+                return null;
+            }
 
-        public FacultyDto? Update(int id, FacultyDto dto)
-        {
-            _logger.LogInformation("Обновление факультета Id={Id}", id);
-            var entity = _context.Faculties.FirstOrDefault(f => f.Id == id);
-            if (entity == null) return null;
-
-            entity.Name = dto.Name;
-            _context.SaveChanges();
-
-            return _mapper.Map<FacultyDto>(entity);
-        }
-
-        public bool Delete(int id)
-        {
-            _logger.LogInformation("Удаление факультета Id={Id}", id);
-            var entity = _context.Faculties.FirstOrDefault(f => f.Id == id);
-            if (entity == null) return false;
-
-            _context.Faculties.Remove(entity);
-            _context.SaveChanges();
-            return true;
+            return _mapper.Map<FacultyDto>(faculty);
         }
     }
 }

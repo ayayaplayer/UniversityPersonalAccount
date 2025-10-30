@@ -3,7 +3,7 @@ using UniversityPersonalAccount.Data;
 using UniversityPersonalAccount.Mappings;
 using UniversityPersonalAccount.Services;
 using UniversityPersonalAccount.Services.Interfaces;
-
+using UniversityPersonalAccount.Middlewares;
 
 
 
@@ -35,7 +35,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 try

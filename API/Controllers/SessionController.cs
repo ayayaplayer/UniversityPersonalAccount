@@ -9,14 +9,20 @@ namespace UniversityPersonalAccount.Controllers
     public class SessionController : ControllerBase
     {
         private readonly ISessionService _service;
+        private readonly ILogger<SessionController> _logger;
 
-        public SessionController(ISessionService service)
+        public SessionController(ISessionService service, ILogger<SessionController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         [HttpGet]
-        public IActionResult GetAll() => Ok(_service.GetAll());
+        public IActionResult GetAll()
+        {
+            _logger.LogInformation("Получение всех сессий");
+            return Ok(_service.GetAll());
+        }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
@@ -28,21 +34,22 @@ namespace UniversityPersonalAccount.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] SessionDto dto)
         {
-            var result = _service.Create(dto);
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            var created = _service.Create(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] SessionDto dto)
         {
-            var result = _service.Update(id, dto);
-            return result == null ? NotFound() : Ok(result);
+            var updated = _service.Update(id, dto);
+            return updated == null ? NotFound() : Ok(updated);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return _service.Delete(id) ? NoContent() : NotFound();
+            var deleted = _service.Delete(id);
+            return deleted ? NoContent() : NotFound();
         }
     }
 }

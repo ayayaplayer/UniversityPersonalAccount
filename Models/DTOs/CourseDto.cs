@@ -8,8 +8,7 @@ namespace UniversityPersonalAccount.Models.DTOs
         public string CourseName { get; set; } = string.Empty;
         public int DegreeLevel { get; set; }
 
-        
-        public List<GroupShortDto>? Groups { get; set; }
-        public List<StudentShortDto>? Students { get; set; }
+        public List<GroupDto> Groups { get; set; } = new();
+        public List<StudentDto> Students { get; set; } = new();
     }
 }

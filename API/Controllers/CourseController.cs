@@ -9,40 +9,68 @@ namespace UniversityPersonalAccount.Controllers
     public class CourseController : ControllerBase
     {
         private readonly ICourseService _service;
+        private readonly ILogger<CourseController> _logger;
 
-        public CourseController(ICourseService service)
+        public CourseController(ICourseService service, ILogger<CourseController> logger)
         {
             _service = service;
+            _logger = logger;
         }
 
         [HttpGet]
-        public IActionResult GetAll() => Ok(_service.GetAll());
+        public IActionResult GetAll()
+        {
+            _logger.LogInformation("Получение списка курсов");
+            return Ok(_service.GetAll());
+        }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var result = _service.GetById(id);
-            return result == null ? NotFound() : Ok(result);
+            if (result == null)
+            {
+                _logger.LogWarning("Курс с Id={Id} не найден", id);
+                return NotFound();
+            }
+
+            return Ok(result);
         }
 
         [HttpPost]
         public IActionResult Create([FromBody] CourseDto dto)
         {
-            var result = _service.Create(dto);
-            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+            _logger.LogInformation("Создание курса {Name}", dto.CourseName);
+            var created = _service.Create(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] CourseDto dto)
         {
-            var result = _service.Update(id, dto);
-            return result == null ? NotFound() : Ok(result);
+            _logger.LogInformation("Обновление курса Id={Id}", id);
+            var updated = _service.Update(id, dto);
+            if (updated == null)
+            {
+                _logger.LogWarning("Курс с Id={Id} не найден", id);
+                return NotFound();
+            }
+
+            return Ok(updated);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return _service.Delete(id) ? NoContent() : NotFound();
+            _logger.LogInformation("Удаление курса Id={Id}", id);
+            var deleted = _service.Delete(id);
+            if (!deleted)
+            {
+                _logger.LogWarning("Курс с Id={Id} не найден для удаления", id);
+                return NotFound();
+            }
+
+            return NoContent();
         }
     }
 }
