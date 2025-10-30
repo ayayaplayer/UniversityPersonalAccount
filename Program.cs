@@ -38,21 +38,6 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
-try
-{
-    var serviceProvider = app.Services;
-    
-  
-    var courseService = serviceProvider.GetRequiredService<ICourseService>();
-    Console.WriteLine("✅ CourseService успешно разрешён");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"❌ Ошибка: {ex.Message}");
-    if (ex.InnerException != null)
-    {
-        Console.WriteLine($"InnerException: {ex.InnerException.Message}");
-    }
-}
+
 
 app.Run();
