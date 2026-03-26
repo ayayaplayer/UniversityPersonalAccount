@@ -12,8 +12,8 @@ using UniversityPersonalAccount.Data;
 namespace UniversityPersonalAccount.Migrations
 {
     [DbContext(typeof(PersonalAccountDbContext))]
-    [Migration("20251030180311_asdf")]
-    partial class asdf
+    [Migration("20260326091938_AddDegreeLevelEnum")]
+    partial class AddDegreeLevelEnum
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -144,7 +144,7 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.ToTable("HalfYears", t =>
                         {
-                            t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\" < ");
+                            t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\"  ");
                         });
                 });
 
@@ -234,7 +234,7 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.ToTable("Students", t =>
                         {
-                            t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' ");
+                            t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' ");
                         });
                 });
 

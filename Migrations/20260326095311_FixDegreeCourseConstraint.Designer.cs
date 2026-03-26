@@ -12,8 +12,8 @@ using UniversityPersonalAccount.Data;
 namespace UniversityPersonalAccount.Migrations
 {
     [DbContext(typeof(PersonalAccountDbContext))]
-    [Migration("20251024065308_NewConnection")]
-    partial class NewConnection
+    [Migration("20260326095311_FixDegreeCourseConstraint")]
+    partial class FixDegreeCourseConstraint
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,15 +63,18 @@ namespace UniversityPersonalAccount.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Degree")
-                        .HasColumnType("text");
+                    b.Property<int>("CourseName")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("text");
+                    b.Property<int>("DegreeLevel")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", t =>
+                        {
+                            t.HasCheckConstraint("CKDegreeCourseValid", "\r\n        (\"DegreeLevel\" = 1 AND \"CourseName\" > 0 AND \"CourseName\" < 5)\r\n        OR\r\n        (\"DegreeLevel\" = 2 AND \"CourseName\" > 0 AND \"CourseName\" < 3)\r\n        OR\r\n        (\"DegreeLevel\" = 3 AND \"CourseName\" > 0 AND \"CourseName\" < 5)\r\n    ");
+                        });
                 });
 
             modelBuilder.Entity("UniversityPersonalAccount.Models.Entities.Faculty", b =>
@@ -97,6 +100,9 @@ namespace UniversityPersonalAccount.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("FacultyId")
                         .HasColumnType("integer");
@@ -125,15 +131,18 @@ namespace UniversityPersonalAccount.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DateEnd")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DateEnd")
+                        .HasColumnType("date");
 
-                    b.Property<DateTime>("DateStart")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("DateStart")
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
-                    b.ToTable("HalfYears");
+                    b.ToTable("HalfYears", t =>
+                        {
+                            t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\"  ");
+                        });
                 });
 
             modelBuilder.Entity("UniversityPersonalAccount.Models.Entities.Schedule", b =>
@@ -146,6 +155,9 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.Property<string>("Classroom")
                         .HasColumnType("text");
+
+                    b.Property<int>("SessionId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("SubjectName")
                         .HasColumnType("text");
@@ -163,7 +175,7 @@ namespace UniversityPersonalAccount.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DayOfWeek")
+                    b.Property<int>("ClassNumber")
                         .HasColumnType("integer");
 
                     b.Property<TimeOnly>("EndTime")
@@ -172,7 +184,7 @@ namespace UniversityPersonalAccount.Migrations
                     b.Property<int>("HalfYearId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ScheduleId")
+                    b.Property<int>("ScheduleId")
                         .HasColumnType("integer");
 
                     b.Property<TimeOnly>("StartTime")
@@ -184,7 +196,12 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.HasIndex("ScheduleId");
 
-                    b.ToTable("Sessions");
+                    b.ToTable("Sessions", t =>
+                        {
+                            t.HasCheckConstraint("CKClassNumber", " \"ClassNumber\" > 0 AND \"ClassNumber\" < 8");
+
+                            t.HasCheckConstraint("CKValidateSessionTime", " \"EndTime\" >  \"StartTime\" ");
+                        });
                 });
 
             modelBuilder.Entity("UniversityPersonalAccount.Models.Entities.Student", b =>
@@ -212,7 +229,10 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", t =>
+                        {
+                            t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' ");
+                        });
                 });
 
             modelBuilder.Entity("CourseGroup", b =>
@@ -270,7 +290,9 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.HasOne("UniversityPersonalAccount.Models.Entities.Schedule", null)
                         .WithMany("Sessions")
-                        .HasForeignKey("ScheduleId");
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("HalfYear");
                 });

@@ -66,14 +66,11 @@ namespace UniversityPersonalAccount.Migrations
                     b.Property<int>("DegreeLevel")
                         .HasColumnType("integer");
 
-                    b.Property<int>("GroupId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.ToTable("Courses", t =>
                         {
-                            t.HasCheckConstraint("CKDegreeCourseValid", "\r\n        (\"DegreeLevel\" = 1 AND \"CourseName\" > 0 AND \"CourseName\" < 5)\r\n        OR\r\n        (\"DegreeLevel\" = 2 AND \"CourseName\" > 0 AND \"CourseName\" < 3)\r\n        OR\r\n        (\"DegreeLevel\" = 3 AND \"CourseName\" > 0 AND \"CourseName\" < 4)\r\n    ");
+                            t.HasCheckConstraint("CKDegreeCourseValid", "\r\n        (\"DegreeLevel\" = 1 AND \"CourseName\" > 0 AND \"CourseName\" < 5)\r\n        OR\r\n        (\"DegreeLevel\" = 2 AND \"CourseName\" > 0 AND \"CourseName\" < 3)\r\n        OR\r\n        (\"DegreeLevel\" = 3 AND \"CourseName\" > 0 AND \"CourseName\" < 5)\r\n    ");
                         });
                 });
 
@@ -141,7 +138,7 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.ToTable("HalfYears", t =>
                         {
-                            t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\" < ");
+                            t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\"  ");
                         });
                 });
 
@@ -231,7 +228,7 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.ToTable("Students", t =>
                         {
-                            t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' ");
+                            t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' ");
                         });
                 });
 

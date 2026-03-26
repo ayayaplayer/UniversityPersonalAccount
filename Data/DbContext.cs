@@ -8,10 +8,10 @@ public class PersonalAccountDbContext : DbContext
     public PersonalAccountDbContext(DbContextOptions<PersonalAccountDbContext> options)
         : base(options)
     {
-        
+
     }
-        
-   
+
+
     public DbSet<Student> Students { get; set; }
     public DbSet<Faculty> Faculties { get; set; }
 
@@ -24,7 +24,7 @@ public class PersonalAccountDbContext : DbContext
     public DbSet<Schedule> Schedules { get; set; }
     public string? DbPath { get; }
 
-    
+
     public PersonalAccountDbContext()
     {
         var folder = Environment.SpecialFolder.LocalApplicationData;
@@ -43,21 +43,22 @@ public class PersonalAccountDbContext : DbContext
         modelBuilder.Entity<Session>()
            .ToTable(t => t.HasCheckConstraint("CKValidateSessionTime", " \"EndTime\" >  \"StartTime\" "));
         modelBuilder.Entity<HalfYear>()
-            .ToTable(t => t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\" < "));
+            .ToTable(t => t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\"  "));
         modelBuilder.Entity<Student>()
-            .ToTable(t => t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' "));
+            .ToTable(t => t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' "));
         modelBuilder.Entity<Course>()
     .ToTable(t => t.HasCheckConstraint("CKDegreeCourseValid", @"
         (""DegreeLevel"" = 1 AND ""CourseName"" > 0 AND ""CourseName"" < 5)
         OR
         (""DegreeLevel"" = 2 AND ""CourseName"" > 0 AND ""CourseName"" < 3)
         OR
-        (""DegreeLevel"" = 3 AND ""CourseName"" > 0 AND ""CourseName"" < 4)
+        (""DegreeLevel"" = 3 AND ""CourseName"" > 0 AND ""CourseName"" < 5)
     "));
+    modelBuilder.Entity<Course>().Property(e => e.DegreeLevel).HasConversion<int>();
     }
-    
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
         => options.UseNpgsql("Host=localhost;Port=5432;Database=PersonalAccountDb;Username=postgres;Password=password");
-    
+
 }

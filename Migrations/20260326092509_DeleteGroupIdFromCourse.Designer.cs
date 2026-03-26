@@ -12,8 +12,8 @@ using UniversityPersonalAccount.Data;
 namespace UniversityPersonalAccount.Migrations
 {
     [DbContext(typeof(PersonalAccountDbContext))]
-    [Migration("20251027081948_NewUpdateEntity")]
-    partial class NewUpdateEntity
+    [Migration("20260326092509_DeleteGroupIdFromCourse")]
+    partial class DeleteGroupIdFromCourse
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,7 +71,10 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", t =>
+                        {
+                            t.HasCheckConstraint("CKDegreeCourseValid", "\r\n        (\"DegreeLevel\" = 1 AND \"CourseName\" > 0 AND \"CourseName\" < 5)\r\n        OR\r\n        (\"DegreeLevel\" = 2 AND \"CourseName\" > 0 AND \"CourseName\" < 3)\r\n        OR\r\n        (\"DegreeLevel\" = 3 AND \"CourseName\" > 0 AND \"CourseName\" < 4)\r\n    ");
+                        });
                 });
 
             modelBuilder.Entity("UniversityPersonalAccount.Models.Entities.Faculty", b =>
@@ -97,6 +100,9 @@ namespace UniversityPersonalAccount.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("FacultyId")
                         .HasColumnType("integer");
@@ -135,7 +141,7 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.ToTable("HalfYears", t =>
                         {
-                            t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\" < ");
+                            t.HasCheckConstraint("CKValidateDate", " \"DateEnd\" >  \"DateStart\"  ");
                         });
                 });
 
@@ -149,6 +155,9 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.Property<string>("Classroom")
                         .HasColumnType("text");
+
+                    b.Property<int>("SessionId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("SubjectName")
                         .HasColumnType("text");
@@ -175,7 +184,7 @@ namespace UniversityPersonalAccount.Migrations
                     b.Property<int>("HalfYearId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("ScheduleId")
+                    b.Property<int>("ScheduleId")
                         .HasColumnType("integer");
 
                     b.Property<TimeOnly>("StartTime")
@@ -222,7 +231,7 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.ToTable("Students", t =>
                         {
-                            t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~ ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' ");
+                            t.HasCheckConstraint("CKValidateEmail", " \"Email\" ~ '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$' ");
                         });
                 });
 
@@ -281,7 +290,9 @@ namespace UniversityPersonalAccount.Migrations
 
                     b.HasOne("UniversityPersonalAccount.Models.Entities.Schedule", null)
                         .WithMany("Sessions")
-                        .HasForeignKey("ScheduleId");
+                        .HasForeignKey("ScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("HalfYear");
                 });

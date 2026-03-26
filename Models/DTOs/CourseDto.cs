@@ -6,7 +6,7 @@ namespace UniversityPersonalAccount.Models.DTOs
     {
         public int Id { get; set; }
         public string CourseName { get; set; } = string.Empty;
-        public int DegreeLevel { get; set; }
+        public string DegreeLevel { get; set; } = string.Empty;
 
         public List<GroupDto> Groups { get; set; } = new();
         public List<StudentDto> Students { get; set; } = new();

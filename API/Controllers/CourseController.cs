@@ -45,7 +45,7 @@ namespace UniversityPersonalAccount.Controllers
             return Ok(result);
         }
         /// <summary>
-        /// Добавление данных о курсе 
+        /// Добавление данных о курсе
         /// </summary>
         [HttpPost]
         public IActionResult Create([FromBody] CourseDto dto)

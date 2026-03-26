@@ -14,29 +14,29 @@ namespace UniversityPersonalAccount.Models.Entities
         Third = 3,
 
         [Display(Name = "Четвертый")]
-        Fourth = 4,   
+        Fourth = 4,
     }
-
     public enum DegreeLevel
-    {
-        [Display(Name = "Бакалавриат")]
-        First = 1,
+       {
+           [Display(Name = "Бакалавриат")]
+           First = 1,
 
-        [Display(Name = "Магистратура")]
-        Second = 2,
+           [Display(Name = "Магистратура")]
+           Second = 2,
 
-        [Display(Name = "Аспирантура")]
-        Third = 3,     
-    }
+           [Display(Name = "Аспирантура")]
+           Third = 3,
+       }
+
 
     public class Course
-    { 
+    {
         public int Id { get; set; }
 
-        public CourseName CourseName { get; set; }        
-        public int DegreeLevel { get; set; }
+        public CourseName CourseName { get; set; }
+        public DegreeLevel DegreeLevel { get; set; }
 
-        public int GroupId { get; set; }
+
         public ICollection<Group> Groups { get; set; } = new List<Group>();
         public ICollection<Student> Students { get; set; } = new List<Student>();
 
